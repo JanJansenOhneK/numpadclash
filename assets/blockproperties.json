@@ -1,0 +1,6 @@
+[
+    {"name":"DebugWall","texture":"assets/textures/blocks/air.png"},
+    {"name":"Grass","texture":"assets/textures/blocks/grass.png"},
+    {"name":"GlitchBlock","texture":"assets/textures/blocks/notexture.png"},
+    {"name":"Stone","texture":"assets/textures/blocks/t_stone.png"}
+]
