@@ -1,7 +1,12 @@
 [
     {
-        "name":"In Game"
+        "name":"In Game",
+        "button":false
     },{
-        "name":"Main Menu"
+        "name":"Main Menu",
+        "button":true
+    },{
+        "name":"Level Editor Selection",
+        "button":true
     }
 ]

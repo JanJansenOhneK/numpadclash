@@ -4,7 +4,7 @@ import json
 SCREEN_SIZE = (700,700)
 BLOCK_SIZE = (SCREEN_SIZE[0]/10,SCREEN_SIZE[1]/10)
 
-GAME_NAME = "Numpad Clash | PRE 1.0"
+GAME_NAME = "Numpad Clash | PRE 1.0.2"
 
 import pygame
 pygame.init()
@@ -46,7 +46,8 @@ load = {
     },
     "menu":{
         "index":1,
-        "menu_index":0
+        "menu_index":0,
+        "buttons":[]
     },
     "player":{
         "position":[0,0]
@@ -78,16 +79,25 @@ def plr_move(pos:tuple[int]):
 def make_text(text:str,size:int=20,color:tuple[int,int,int]=(255,255,255)) -> pygame.Surface:
     return pygame.font.SysFont("Arial",size).render(text,True,color)
 
-def press_menubutton(index:int) -> None:
+def change_menu(index:int) -> None:
+    global load
+    load["menu"]["index"] = index
+    load["menu"]["menu_index"] = 0
+
+def press_menubutton(index:int,menu:int) -> None:
     global load, running
-    if index == 0:
-        load["menu"]["index"] = 0
-    elif index == 1:
-        pass
-    elif index == 2:
-        pass
-    elif index == 3:
-        running = False
+    if menu == 1:
+        if index == 0:
+            change_menu(0)
+        elif index == 1:
+            pass
+        elif index == 2:
+            change_menu(2)
+        elif index == 3:
+            running = False
+    elif menu == 2:
+        if index == 0:
+            change_menu(1)
 
 while running:
 
@@ -97,15 +107,26 @@ while running:
     # tick clock
     clock.tick(60)
 
+    # set buttons
+    if load["menu"]["index"] == 0:
+        load["menu"]["buttons"] = []
+
+    elif load["menu"]["index"] == 1:
+        load["menu"]["buttons"] = ["Play","Settings","Map Editor","Quit"]
+
+    elif load["menu"]["index"] == 2:
+        load["menu"]["buttons"] = ["Back","New Map"]
+        for map in jsons["save_main"]["maps"]:
+            load["menu"]["buttons"].append(f'Edit "{map["name"]}"')
+
     # event loop
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.KEYDOWN:
-            
             if load["menu"]["index"] == 0:
                 if event.key == pygame.K_KP0: # quit to main menu
-                    load["menu"]["index"] = 1
+                    change_menu(1)
 
                 elif event.key == pygame.K_KP6: # right
                     plr_move((1,0))
@@ -116,12 +137,12 @@ while running:
                 elif event.key == pygame.K_KP8: # up
                     plr_move((0,-1))
             
-            elif load["menu"]["index"] == 1:
+            elif jsons["props_menus"][load["menu"]["index"]]["button"]:
 
                 if event.key == pygame.K_KP5: # press
-                    press_menubutton(load["menu"]["menu_index"])
-                elif event.key == pygame.K_KP0: # quit
-                    press_menubutton(3)
+                    press_menubutton(load["menu"]["menu_index"],load["menu"]["index"])
+                #elif event.key == pygame.K_KP0: # quit
+                #    press_menubutton(3,0)
 
                 elif event.key == pygame.K_KP2: # down
                     load["menu"]["menu_index"] += 1
@@ -132,11 +153,12 @@ while running:
     # screen reset
     screen.fill((0,0,0))
 
-    if load["menu"]["index"] == 1: # main menu
-        load["menu"]["menu_index"] = load["menu"]["menu_index"] % 3
+    if jsons["props_menus"][load["menu"]["index"]]["button"]:
+
+        load["menu"]["menu_index"] = load["menu"]["menu_index"] % len(load["menu"]["buttons"])
 
         screen.blit(make_text(f"Button index: {load["menu"]["menu_index"]}"),(0,40))
-        screen.blit(make_text("0-Play 1-Settings 2-LevelEditor 3-Quit"),(0,60))
+        screen.blit(make_text(f"Button: {load["menu"]["buttons"][load["menu"]["menu_index"]]}"),(0,60))
         screen.blit(make_text("This is a placeholder btw"),(0,90))
             
     elif load["menu"]["index"] == 0:
