@@ -79,13 +79,14 @@ def make_text(text:str,size:int=20,color:tuple[int,int,int]=(255,255,255)) -> py
     return pygame.font.SysFont("Arial",size).render(text,True,color)
 
 def press_menubutton(index:int) -> None:
-    global load
-    global running
+    global load, running
     if index == 0:
         load["menu"]["index"] = 0
     elif index == 1:
         pass
     elif index == 2:
+        pass
+    elif index == 3:
         running = False
 
 while running:
@@ -119,6 +120,8 @@ while running:
 
                 if event.key == pygame.K_KP5: # press
                     press_menubutton(load["menu"]["menu_index"])
+                elif event.key == pygame.K_KP0: # quit
+                    press_menubutton(3)
 
                 elif event.key == pygame.K_KP2: # down
                     load["menu"]["menu_index"] += 1
@@ -133,7 +136,7 @@ while running:
         load["menu"]["menu_index"] = load["menu"]["menu_index"] % 3
 
         screen.blit(make_text(f"Button index: {load["menu"]["menu_index"]}"),(0,40))
-        screen.blit(make_text("0-Play 1-Settings 2-Quit"),(0,60))
+        screen.blit(make_text("0-Play 1-Settings 2-LevelEditor 3-Quit"),(0,60))
         screen.blit(make_text("This is a placeholder btw"),(0,90))
             
     elif load["menu"]["index"] == 0:
