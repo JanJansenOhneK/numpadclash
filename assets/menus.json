@@ -10,12 +10,12 @@
         "button":true
     },{
         "name":"Level Type Select",
-        "buttons":true
+        "button":true
     },{
         "name":"Custom Level Selection",
-        "buttons":true
+        "button":true
     },{
         "name":"Story Mode Level Selection",
-        "buttons":true
+        "button":true
     }
 ]

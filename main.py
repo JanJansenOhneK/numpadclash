@@ -5,7 +5,7 @@ SCREEN_SIZE = (700,700)
 BLOCK_SIZE = (SCREEN_SIZE[0]/10,SCREEN_SIZE[1]/10)
 SCALE_FACTOR = (BLOCK_SIZE[0]/16, BLOCK_SIZE[1]/16)
 
-GAME_NAME = "Numpad Clash | PRE 1.0.5"
+GAME_NAME = "Numpad Clash | PRE 1.0.6"
 OLD_BUTTON_SYSTEM = False
 
 import pygame
@@ -112,7 +112,7 @@ def press_menubutton(index:int,menu:int) -> None:
     global load, running
     if menu == 1:
         if index == 0:
-            change_menu(0)
+            change_menu(3)
         elif index == 1:
             pass
         elif index == 2:
@@ -120,6 +120,9 @@ def press_menubutton(index:int,menu:int) -> None:
         elif index == 3:
             running = False
     elif menu == 2:
+        if index == 0:
+            change_menu(1)
+    elif menu == 3:
         if index == 0:
             change_menu(1)
 
@@ -172,11 +175,15 @@ while running:
         load["menu"]["buttons"] = ["Back","New Map"]
         for map in jsons["save_main"]["maps"]:
             load["menu"]["buttons"].append(f'Edit "{map["name"]}"')
+    
+    elif load["menu"]["index"] == 3:
+        load["menu"]["buttons"] = ["Back","Story Mode","Custom Levels"]
                 
 
     # screen reset
     screen.fill((0,0,0))
 
+    # menu render
     if jsons["props_menus"][load["menu"]["index"]]["button"]:
 
         # render bg
@@ -207,9 +214,14 @@ while running:
                         make_text(f"      {load["menu"]["buttons"][i]}",30),
                         (40,40+i*40)
                     )
+        
+        # special menu render
+        if load["menu"]["index"] == 2:
+            screen.blit(make_text("I didnt code the level editor yet lol",color=(255,0,0)),(200,400))
 
+    
 
-            
+    # map render    
     elif load["menu"]["index"] == 0:
         # render bg
 
