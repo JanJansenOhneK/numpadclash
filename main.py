@@ -5,7 +5,9 @@ SCREEN_SIZE = (700,700)
 BLOCK_SIZE = (SCREEN_SIZE[0]/10,SCREEN_SIZE[1]/10)
 SCALE_FACTOR = (BLOCK_SIZE[0]/16, BLOCK_SIZE[1]/16)
 
-GAME_NAME = "Numpad Clash | PRE 1.1.0"
+OLD_BUTTON_SYSTEM = False
+
+GAME_NAME = "Numpad Clash | PRE 1.1.1"
 import pygame
 pygame.init()
 screen = pygame.display.set_mode(SCREEN_SIZE)
@@ -60,7 +62,7 @@ def check_collision(pos:tuple[int]) -> bool:
         return True
     elif pos[0] > len(load["map"]["hitboxes"][0]) - 1:
         return True
-    elif pos[1] > len(load["map"]["hitboxes"][1]) - 1:
+    elif pos[1] > len(load["map"]["hitboxes"]) - 1:
         return True
     else:
         return load["map"]["hitboxes"][pos[1]][pos[0]]
