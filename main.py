@@ -4,7 +4,7 @@ import json
 SCREEN_SIZE = (700,700)
 BLOCK_SIZE = (SCREEN_SIZE[0]/10,SCREEN_SIZE[1]/10)
 
-GAME_NAME = "Numpad Clash | PRE 1.0.2"
+GAME_NAME = "Numpad Clash | PRE 1.0.3"
 
 import pygame
 pygame.init()
@@ -28,12 +28,21 @@ for i in range(len(list(jsons_files.keys()))):
 load = {
     "map":{
         "textures":[
-            [[1],[1],[1],[1],[1],[1]],
-            [[1],[3],[3],[3],[3],[1]],
-            [[1],[3],[1],[1],[1],[1]],
-            [[1],[3],[1],[1],[3],[1]],
-            [[1],[3],[3],[3],[1],[1]],
-            [[1],[1],[1],[1],[1],[1]]
+            [
+                [2,2,2,2,2,2],
+                [2,3,3,3,3,2],
+                [2,3,2,2,2,2],
+                [2,3,2,2,3,2],
+                [2,3,3,3,2,2],
+                [2,2,2,2,2,2]
+            ],[
+                [0,0,0,0,0,4],
+                [4,0,0,0,0,0],
+                [0,0,0,4,0,0],
+                [0,0,0,0,0,0],
+                [0,0,0,0,1,0],
+                [0,4,0,0,0,4]
+            ]
         ],
         "hitboxes":[
             [False,False,False,False,False,False],
@@ -51,7 +60,8 @@ load = {
     },
     "player":{
         "position":[0,0]
-    }
+    },
+    "framecount":0
 }
 
 textures = {
@@ -64,7 +74,16 @@ for i in range(len(list(textures.keys()))):
     )
 
 def check_collision(pos:tuple[int]) -> bool:
-    return load["map"]["hitboxes"][pos[1]][pos[0]]
+    if pos[0] < 0:
+        return True
+    elif pos[1] < 0:
+        return True
+    elif pos[0] > len(load["map"]["hitboxes"][0]) - 1:
+        return True
+    elif pos[1] > len(load["map"]["hitboxes"][1]) - 1:
+        return True
+    else:
+        return load["map"]["hitboxes"][pos[1]][pos[0]]
 
 def plr_move(pos:tuple[int]):
     if check_collision((
@@ -107,18 +126,6 @@ while running:
     # tick clock
     clock.tick(60)
 
-    # set buttons
-    if load["menu"]["index"] == 0:
-        load["menu"]["buttons"] = []
-
-    elif load["menu"]["index"] == 1:
-        load["menu"]["buttons"] = ["Play","Settings","Map Editor","Quit"]
-
-    elif load["menu"]["index"] == 2:
-        load["menu"]["buttons"] = ["Back","New Map"]
-        for map in jsons["save_main"]["maps"]:
-            load["menu"]["buttons"].append(f'Edit "{map["name"]}"')
-
     # event loop
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -148,6 +155,18 @@ while running:
                     load["menu"]["menu_index"] += 1
                 elif event.key == pygame.K_KP8: # up
                     load["menu"]["menu_index"] += -1
+    
+    # set buttons
+    if load["menu"]["index"] == 0:
+        load["menu"]["buttons"] = []
+
+    elif load["menu"]["index"] == 1:
+        load["menu"]["buttons"] = ["Play","Settings","Map Editor","Quit"]
+
+    elif load["menu"]["index"] == 2:
+        load["menu"]["buttons"] = ["Back","New Map"]
+        for map in jsons["save_main"]["maps"]:
+            load["menu"]["buttons"].append(f'Edit "{map["name"]}"')
                 
 
     # screen reset
@@ -155,22 +174,28 @@ while running:
 
     if jsons["props_menus"][load["menu"]["index"]]["button"]:
 
+        # render bg
+        for y in range(int(SCREEN_SIZE[0]/BLOCK_SIZE[0])):
+            for x in range(int(SCREEN_SIZE[1]/BLOCK_SIZE[1])):
+                screen.blit(
+                    pygame.transform.scale(pygame.image.load(jsons["props_blocks"][2]["texture"]),(BLOCK_SIZE[0],BLOCK_SIZE[1])),
+                    [x*BLOCK_SIZE[0],y*BLOCK_SIZE[1]]
+                )
+
         load["menu"]["menu_index"] = load["menu"]["menu_index"] % len(load["menu"]["buttons"])
 
-        screen.blit(make_text(f"Button index: {load["menu"]["menu_index"]}"),(0,40))
-        screen.blit(make_text(f"Button: {load["menu"]["buttons"][load["menu"]["menu_index"]]}"),(0,60))
-        screen.blit(make_text("This is a placeholder btw"),(0,90))
+        screen.blit(make_text(f"Button index: {load["menu"]["menu_index"]}",color=(0,0,0)),(0,40))
+        screen.blit(make_text(f"Button: {load["menu"]["buttons"][load["menu"]["menu_index"]]}",color=(0,0,0)),(0,60))
+        screen.blit(make_text("This is a placeholder btw",color=(0,0,0)),(0,90))
             
     elif load["menu"]["index"] == 0:
-
         # render bg
-        
 
         # render map
-        for y in range(len(load["map"]["textures"])):
-            for x in range(len(load["map"]["textures"][y])):
-                for z in range(len(load["map"]["textures"][y][x])):
-                    block_texture = jsons["props_blocks"][load["map"]["textures"][y][x][z]]["texture"]
+        for z in range(len(load["map"]["textures"])):
+            for y in range(len(load["map"]["textures"][z])):
+                for x in range(len(load["map"]["textures"][z][y])):
+                    block_texture = jsons["props_blocks"][load["map"]["textures"][z][y][x]]["texture"]
                     block_texture = pygame.image.load(block_texture)
                     block_texture = pygame.transform.scale(block_texture,(BLOCK_SIZE[0],BLOCK_SIZE[1]))
                     block_pos = [
@@ -191,6 +216,9 @@ while running:
 
     # flip
     pygame.display.flip()
+
+    # framecount
+    load["framecount"] += 1
 
 
 

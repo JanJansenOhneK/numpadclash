@@ -2,5 +2,6 @@
     {"name":"Air","texture":"assets/textures/blocks/air.png"},
     {"name":"GlitchBlock","texture":"assets/textures/blocks/notexture.png"},
     {"name":"Grass","texture":"assets/textures/blocks/grass.png"},
-    {"name":"Stone","texture":"assets/textures/blocks/t_stone.png"}
+    {"name":"Stone","texture":"assets/textures/blocks/t_stone.png"},
+    {"name":"Flower","texture":"assets/textures/blocks/flower.png"}
 ]
