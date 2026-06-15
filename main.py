@@ -7,7 +7,7 @@ SCALE_FACTOR = (BLOCK_SIZE[0]/16, BLOCK_SIZE[1]/16)
 
 OLD_BUTTON_SYSTEM = False
 
-GAME_NAME = "Numpad Clash | PRE 1.1.1"
+GAME_NAME = "Numpad Clash | PRE 1.1.2"
 import pygame
 pygame.init()
 screen = pygame.display.set_mode(SCREEN_SIZE)
@@ -156,8 +156,9 @@ while running:
 
                 if event.key == pygame.K_KP5: # press
                     press_menubutton(load["menu"]["menu_index"],load["menu"]["index"])
-                #elif event.key == pygame.K_KP0: # quit
-                #    press_menubutton(3,0)
+                elif event.key == pygame.K_KP0: # quit main menu
+                    if load["menu"]["index"] == 1:
+                        press_menubutton(3,1)
 
                 elif event.key == pygame.K_KP2: # down
                     load["menu"]["menu_index"] += 1

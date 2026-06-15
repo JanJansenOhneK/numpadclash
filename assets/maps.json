@@ -3,7 +3,10 @@
         "name":"Tutorial 1",
         "map":{
             "billboards":[
-                [{"position":[0,0],"texture":"assets/textures/billboards/tuto_move.png"}]
+                [
+                    {"position":[0,0],"texture":"assets/textures/billboards/tuto_move.png"},
+                    {"position":[7,7],"texture":"assets/textures/billboards/tuto_flag.png"}
+                ]
             ],
             "textures":[
                 [
@@ -14,6 +17,14 @@
                     [3,2,2,2,2,2,2,2,2,3],
                     [3,2,2,2,2,2,2,2,2,3],
                     [3,3,3,3,3,3,3,3,3,3]
+                ],[
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,5,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0]
                 ],[
                     [0,0,0,0,0,0,0,0,0,0],
                     [0,0,0,0,0,0,4,0,0,0],
