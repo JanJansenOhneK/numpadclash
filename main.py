@@ -4,7 +4,8 @@ import json
 SCREEN_SIZE = (700,700)
 BLOCK_SIZE = (SCREEN_SIZE[0]/10,SCREEN_SIZE[1]/10)
 
-GAME_NAME = "Numpad Clash | PRE 1.0.3"
+GAME_NAME = "Numpad Clash | PRE 1.0.4"
+OLD_BUTTON_SYSTEM = False
 
 import pygame
 pygame.init()
@@ -95,7 +96,7 @@ def plr_move(pos:tuple[int]):
         load["player"]["position"][0] += pos[0]
         load["player"]["position"][1] += pos[1]
 
-def make_text(text:str,size:int=20,color:tuple[int,int,int]=(255,255,255)) -> pygame.Surface:
+def make_text(text:str,size:int=30,color:tuple[int,int,int]=(0,0,0)) -> pygame.Surface:
     return pygame.font.SysFont("Arial",size).render(text,True,color)
 
 def change_menu(index:int) -> None:
@@ -184,9 +185,26 @@ while running:
 
         load["menu"]["menu_index"] = load["menu"]["menu_index"] % len(load["menu"]["buttons"])
 
-        screen.blit(make_text(f"Button index: {load["menu"]["menu_index"]}",color=(0,0,0)),(0,40))
-        screen.blit(make_text(f"Button: {load["menu"]["buttons"][load["menu"]["menu_index"]]}",color=(0,0,0)),(0,60))
-        screen.blit(make_text("This is a placeholder btw",color=(0,0,0)),(0,90))
+        if OLD_BUTTON_SYSTEM:
+
+            screen.blit(make_text(f"Button index: {load["menu"]["menu_index"]}"),(0,40))
+            screen.blit(make_text(f"Button: {load["menu"]["buttons"][load["menu"]["menu_index"]]}"),(0,60))
+            screen.blit(make_text("This is a placeholder btw"),(0,90))
+        else:
+
+            for i in range(len(load["menu"]["buttons"])):
+                if i == load["menu"]["menu_index"]:
+                    screen.blit(
+                        make_text(f"--> {load["menu"]["buttons"][i]}",30),
+                        (40,40+i*40)
+                    )
+                else:
+                    screen.blit(
+                        make_text(f"      {load["menu"]["buttons"][i]}",30),
+                        (40,40+i*40)
+                    )
+
+
             
     elif load["menu"]["index"] == 0:
         # render bg
@@ -212,7 +230,7 @@ while running:
         )
 
     # fps and more
-    screen.blit(make_text(f"FPS: {round(clock.get_fps()*100)/100}",15),(0,0))
+    screen.blit(make_text(f"FPS: {round(clock.get_fps()*100)/100}",15,(80,80,80)),(0,0))
 
     # flip
     pygame.display.flip()
