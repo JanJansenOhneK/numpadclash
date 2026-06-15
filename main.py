@@ -3,8 +3,9 @@ import json
 
 SCREEN_SIZE = (700,700)
 BLOCK_SIZE = (SCREEN_SIZE[0]/10,SCREEN_SIZE[1]/10)
+SCALE_FACTOR = (BLOCK_SIZE[0]/16, BLOCK_SIZE[1]/16)
 
-GAME_NAME = "Numpad Clash | PRE 1.0.4"
+GAME_NAME = "Numpad Clash | PRE 1.0.5"
 OLD_BUTTON_SYSTEM = False
 
 import pygame
@@ -28,6 +29,9 @@ for i in range(len(list(jsons_files.keys()))):
 
 load = {
     "map":{
+        "billboards":[
+            [{"position":[1,1],"texture":"assets/textures/billboards/bill.png"}]
+        ],
         "textures":[
             [
                 [2,2,2,2,2,2],
@@ -69,9 +73,9 @@ textures = {
     "plr_idle":"assets/textures/player/t_idle.png"
 }
 for i in range(len(list(textures.keys()))):
-    textures[list(textures.keys())[i]] = pygame.transform.scale(
+    textures[list(textures.keys())[i]] = pygame.transform.scale_by(
         pygame.image.load(list(textures.values())[i]),
-        (BLOCK_SIZE[0],BLOCK_SIZE[1]) # placeholder !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        SCALE_FACTOR # change
     )
 
 def check_collision(pos:tuple[int]) -> bool:
@@ -179,7 +183,7 @@ while running:
         for y in range(int(SCREEN_SIZE[0]/BLOCK_SIZE[0])):
             for x in range(int(SCREEN_SIZE[1]/BLOCK_SIZE[1])):
                 screen.blit(
-                    pygame.transform.scale(pygame.image.load(jsons["props_blocks"][2]["texture"]),(BLOCK_SIZE[0],BLOCK_SIZE[1])),
+                    pygame.transform.scale(pygame.image.load(jsons["props_blocks"][2]["texture"]),BLOCK_SIZE),
                     [x*BLOCK_SIZE[0],y*BLOCK_SIZE[1]]
                 )
 
@@ -215,13 +219,26 @@ while running:
                 for x in range(len(load["map"]["textures"][z][y])):
                     block_texture = jsons["props_blocks"][load["map"]["textures"][z][y][x]]["texture"]
                     block_texture = pygame.image.load(block_texture)
-                    block_texture = pygame.transform.scale(block_texture,(BLOCK_SIZE[0],BLOCK_SIZE[1]))
+                    block_texture = pygame.transform.scale(block_texture,BLOCK_SIZE)
                     block_pos = [
                         (-1 * load["player"]["position"][0] + x)*BLOCK_SIZE[0] + (350-BLOCK_SIZE[0]/2),
                         (-1 * load["player"]["position"][1] + y)*BLOCK_SIZE[1] + (350-BLOCK_SIZE[1]/2)
                     ]
                     screen.blit(block_texture,block_pos)
                     
+        # render billboards
+        for z in range(len(load["map"]["billboards"])):
+            for i in range(len(load["map"]["billboards"][z])):
+
+                billboard_texture = load["map"]["billboards"][z][i]["texture"]
+                billboard_texture = pygame.image.load(billboard_texture)
+                billboard_texture = pygame.transform.scale_by(billboard_texture,SCALE_FACTOR)
+                
+                billboard_pos = [
+                    (-1 * load["player"]["position"][0] + load["map"]["billboards"][z][i]["position"][0]) * BLOCK_SIZE[0] + (350-BLOCK_SIZE[0]/2) ,
+                    (-1 * load["player"]["position"][1] + load["map"]["billboards"][z][i]["position"][1]) * BLOCK_SIZE[1] + (350-BLOCK_SIZE[1]/2)
+                ]
+                screen.blit(billboard_texture,billboard_pos)
 
         # render player
         screen.blit(

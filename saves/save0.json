@@ -3,7 +3,11 @@
     "maps":[
         {
             "name":"G of Doom",
+            
             "map":{
+                "billboards":[
+                    [{"position":[1,1],"texture":"assets/textures/billboards/bill.png"}]
+                ],
                 "textures":[
                     [
                         [2,2,2,2,2,2],

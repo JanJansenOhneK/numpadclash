@@ -8,5 +8,14 @@
     },{
         "name":"Level Editor Selection",
         "button":true
+    },{
+        "name":"Level Type Select",
+        "buttons":true
+    },{
+        "name":"Custom Level Selection",
+        "buttons":true
+    },{
+        "name":"Story Mode Level Selection",
+        "buttons":true
     }
 ]
