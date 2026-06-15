@@ -5,9 +5,7 @@ SCREEN_SIZE = (700,700)
 BLOCK_SIZE = (SCREEN_SIZE[0]/10,SCREEN_SIZE[1]/10)
 SCALE_FACTOR = (BLOCK_SIZE[0]/16, BLOCK_SIZE[1]/16)
 
-GAME_NAME = "Numpad Clash | PRE 1.0.6"
-OLD_BUTTON_SYSTEM = False
-
+GAME_NAME = "Numpad Clash | PRE 1.1.0"
 import pygame
 pygame.init()
 screen = pygame.display.set_mode(SCREEN_SIZE)
@@ -19,7 +17,8 @@ running = True
 
 jsons_files = {
     "props_blocks":open("assets/blockproperties.json","r"),
-    "props_menus":open("assets/menus.json"),
+    "props_menus":open("assets/menus.json","r"),
+    "story_maps":open("assets/maps.json","r"),
     "save_main":open("saves/save0.json","r+")
 }
 
@@ -29,34 +28,10 @@ for i in range(len(list(jsons_files.keys()))):
 
 load = {
     "map":{
-        "billboards":[
-            [{"position":[1,1],"texture":"assets/textures/billboards/bill.png"}]
-        ],
-        "textures":[
-            [
-                [2,2,2,2,2,2],
-                [2,3,3,3,3,2],
-                [2,3,2,2,2,2],
-                [2,3,2,2,3,2],
-                [2,3,3,3,2,2],
-                [2,2,2,2,2,2]
-            ],[
-                [0,0,0,0,0,4],
-                [4,0,0,0,0,0],
-                [0,0,0,4,0,0],
-                [0,0,0,0,0,0],
-                [0,0,0,0,1,0],
-                [0,4,0,0,0,4]
-            ]
-        ],
-        "hitboxes":[
-            [False,False,False,False,False,False],
-            [False,True,True,True,True,False],
-            [False,True,False,False,False,False],
-            [False,True,False,False,True,False],
-            [False,True,True,True,False,False],
-            [False,False,False,False,False,False]
-        ]
+        "billboards":[],
+        "textures":[],
+        "hitboxes":[],
+        "spawn":[0,0]
     },
     "menu":{
         "index":1,
@@ -100,6 +75,12 @@ def plr_move(pos:tuple[int]):
         load["player"]["position"][0] += pos[0]
         load["player"]["position"][1] += pos[1]
 
+def load_map(map) -> None:
+    load["map"] = map
+    load["player"] = {
+        "position":map["spawn"]
+    }
+
 def make_text(text:str,size:int=30,color:tuple[int,int,int]=(0,0,0)) -> pygame.Surface:
     return pygame.font.SysFont("Arial",size).render(text,True,color)
 
@@ -125,6 +106,23 @@ def press_menubutton(index:int,menu:int) -> None:
     elif menu == 3:
         if index == 0:
             change_menu(1)
+        elif index == 1:
+            change_menu(5)
+        elif index == 2:
+            change_menu(4)
+    elif menu == 4:
+        if index == 0:
+            change_menu(3)
+        else:
+            load_map(jsons["save_main"]["maps"][index-1]["map"])
+            change_menu(0)
+
+    elif menu == 5:
+        if index == 0:
+            change_menu(3)
+        else:
+            load_map(jsons["story_maps"][index-1]["map"])
+            change_menu(0)
 
 while running:
 
@@ -169,15 +167,25 @@ while running:
         load["menu"]["buttons"] = []
 
     elif load["menu"]["index"] == 1:
-        load["menu"]["buttons"] = ["Play","Settings","Map Editor","Quit"]
+        load["menu"]["buttons"] = ["Play","Settings","Level Editor","Quit"]
 
     elif load["menu"]["index"] == 2:
-        load["menu"]["buttons"] = ["Back","New Map"]
+        load["menu"]["buttons"] = ["Back","New Level"]
         for map in jsons["save_main"]["maps"]:
             load["menu"]["buttons"].append(f'Edit "{map["name"]}"')
     
     elif load["menu"]["index"] == 3:
         load["menu"]["buttons"] = ["Back","Story Mode","Custom Levels"]
+
+    elif load["menu"]["index"] == 4:
+        load["menu"]["buttons"] = ["Back"]
+        for map in jsons["save_main"]["maps"]:
+            load["menu"]["buttons"].append(f'Play "{map["name"]}"')
+    
+    elif load["menu"]["index"] == 5:
+        load["menu"]["buttons"] = ["Back"]
+        for map in jsons["story_maps"]:
+            load["menu"]["buttons"].append(f'Play "{map["name"]}"')
                 
 
     # screen reset

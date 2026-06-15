@@ -12,7 +12,8 @@
             ],
             "hitboxes":[
                 [false]
-            ]
+            ],
+            "spawn":[0,0]
         }
     }
 ]
