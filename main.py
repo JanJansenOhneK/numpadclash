@@ -7,7 +7,7 @@ SCALE_FACTOR = (BLOCK_SIZE[0]/16, BLOCK_SIZE[1]/16)
 
 OLD_BUTTON_SYSTEM = False
 
-GAME_NAME = "Numpad Clash | PRE 1.1.2"
+GAME_NAME = "Numpad Clash | PRE 1.1.3"
 import pygame
 pygame.init()
 screen = pygame.display.set_mode(SCREEN_SIZE)
@@ -21,6 +21,7 @@ jsons_files = {
     "props_blocks":open("assets/blockproperties.json","r"),
     "props_menus":open("assets/menus.json","r"),
     "story_maps":open("assets/maps.json","r"),
+    "bonus_maps":open("assets/bonusmaps.json","r"),
     "save_main":open("saves/save0.json","r+")
 }
 
@@ -68,14 +69,18 @@ def check_collision(pos:tuple[int]) -> bool:
         return load["map"]["hitboxes"][pos[1]][pos[0]]
 
 def plr_move(pos:tuple[int]):
-    if check_collision((
-        load["player"]["position"][0] + pos[0],
-        load["player"]["position"][1] + pos[1]
-    )):
+    if check_collision((load["player"]["position"][0] + pos[0],load["player"]["position"][1] + pos[1])):
         pass
     else:
         load["player"]["position"][0] += pos[0]
         load["player"]["position"][1] += pos[1]
+
+    # check things
+    for z in range(len(load["map"]["textures"])):
+        if 5 == load["map"]["textures"][z][load["player"]["position"][1]][load["player"]["position"][0]]:
+            print("Level finished!")
+            change_menu(1)
+
 
 def load_map(map) -> None:
     load["map"] = map
@@ -111,6 +116,8 @@ def press_menubutton(index:int,menu:int) -> None:
         elif index == 1:
             change_menu(5)
         elif index == 2:
+            change_menu(6)
+        elif index == 3:
             change_menu(4)
     elif menu == 4:
         if index == 0:
@@ -118,12 +125,17 @@ def press_menubutton(index:int,menu:int) -> None:
         else:
             load_map(jsons["save_main"]["maps"][index-1]["map"])
             change_menu(0)
-
     elif menu == 5:
         if index == 0:
             change_menu(3)
         else:
             load_map(jsons["story_maps"][index-1]["map"])
+            change_menu(0)
+    elif menu == 6:
+        if index == 0:
+            change_menu(3)
+        else:
+            load_map(jsons["bonus_maps"][index-1]["map"])
             change_menu(0)
 
 while running:
@@ -178,7 +190,7 @@ while running:
             load["menu"]["buttons"].append(f'Edit "{map["name"]}"')
     
     elif load["menu"]["index"] == 3:
-        load["menu"]["buttons"] = ["Back","Story Mode","Custom Levels"]
+        load["menu"]["buttons"] = ["Back","Story Mode","Bonus Levels","Custom Levels"]
 
     elif load["menu"]["index"] == 4:
         load["menu"]["buttons"] = ["Back"]
@@ -188,6 +200,11 @@ while running:
     elif load["menu"]["index"] == 5:
         load["menu"]["buttons"] = ["Back"]
         for map in jsons["story_maps"]:
+            load["menu"]["buttons"].append(f'Play "{map["name"]}"')
+
+    elif load["menu"]["index"] == 6:
+        load["menu"]["buttons"] = ["Back"]
+        for map in jsons["bonus_maps"]:
             load["menu"]["buttons"].append(f'Play "{map["name"]}"')
                 
 
@@ -208,7 +225,6 @@ while running:
         load["menu"]["menu_index"] = load["menu"]["menu_index"] % len(load["menu"]["buttons"])
 
         if OLD_BUTTON_SYSTEM:
-
             screen.blit(make_text(f"Button index: {load["menu"]["menu_index"]}"),(0,40))
             screen.blit(make_text(f"Button: {load["menu"]["buttons"][load["menu"]["menu_index"]]}"),(0,60))
             screen.blit(make_text("This is a placeholder btw"),(0,90))
@@ -229,6 +245,11 @@ while running:
         # special menu render
         if load["menu"]["index"] == 2:
             screen.blit(make_text("I didnt code the level editor yet lol",color=(255,0,0)),(200,400))
+        elif load["menu"]["index"] == 6:
+            if load["menu"]["menu_index"] == 0:
+                pass
+            else:
+                screen.blit(make_text(f"{jsons["bonus_maps"][load["menu"]["menu_index"]-1]["context"]}",size=15),(40,400))
 
     
 

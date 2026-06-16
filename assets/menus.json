@@ -17,5 +17,8 @@
     },{
         "name":"Story Mode Level Selection",
         "button":true
+    },{
+        "name":"Bonus Level Selection",
+        "button":true
     }
 ]
