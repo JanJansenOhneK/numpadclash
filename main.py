@@ -7,7 +7,7 @@ SCALE_FACTOR = (BLOCK_SIZE[0]/16, BLOCK_SIZE[1]/16)
 
 OLD_BUTTON_SYSTEM = False
 
-GAME_NAME = "Numpad Clash | PRE 1.1.3"
+GAME_NAME = "Numpad Clash | PRE 1.1.4"
 import pygame
 pygame.init()
 screen = pygame.display.set_mode(SCREEN_SIZE)
@@ -209,7 +209,7 @@ while running:
                 
 
     # screen reset
-    screen.fill((0,0,0))
+    screen.fill((0,255,255))
 
     # menu render
     if jsons["props_menus"][load["menu"]["index"]]["button"]:
