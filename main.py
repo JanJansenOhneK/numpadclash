@@ -7,7 +7,7 @@ SCALE_FACTOR = (BLOCK_SIZE[0]/16, BLOCK_SIZE[1]/16)
 
 OLD_BUTTON_SYSTEM = False
 
-GAME_NAME = "Numpad Clash | PRE 1.1.4"
+GAME_NAME = "Numpad Clash | PRE 1.1.4.1"
 import pygame
 pygame.init()
 screen = pygame.display.set_mode(SCREEN_SIZE)

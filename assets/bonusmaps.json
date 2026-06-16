@@ -4,17 +4,26 @@
         "context":"Test for billboards",
         "map":{
             "billboards":[
-                [{"position":[0,0],"texture":"assets/textures/billboards/rickroll.png"}]
+                [
+                    {"position":[0,0],"texture":"assets/textures/billboards/rickroll.png"},
+                    {"position":[-4,0],"texture":"assets/textures/billboards/rickroll.png"},
+                    {"position":[0,-4],"texture":"assets/textures/billboards/rickroll.png"},
+                    {"position":[-4,-4],"texture":"assets/textures/billboards/rickroll.png"}
+                ]
             ],
             "textures":[
                 [
-                    [0]
+                    [5,5,5],
+                    [5,0,5],
+                    [5,5,5]
                 ]
             ],
             "hitboxes":[
-                [false]
+                [false,false,false],
+                [false,false,false],
+                [false,false,false]
             ],
-            "spawn":[0,0]
+            "spawn":[1,1]
         }
     },{
         "name":"Ai Slop",
