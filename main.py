@@ -1,5 +1,5 @@
 
-import json
+import json, copy
 
 SCREEN_SIZE = (700,700)
 BLOCK_SIZE = (SCREEN_SIZE[0]/10,SCREEN_SIZE[1]/10)
@@ -7,12 +7,12 @@ SCALE_FACTOR = (BLOCK_SIZE[0]/16, BLOCK_SIZE[1]/16)
 
 OLD_BUTTON_SYSTEM = False
 
-GAME_NAME = "Numpad Clash | PRE 1.1.4.1"
+GAME_NAME = "Numpad Clash | PRE 1.2.0"
 import pygame
 pygame.init()
 screen = pygame.display.set_mode(SCREEN_SIZE)
 pygame.display.set_caption(f"{GAME_NAME} (Loading...)")
-pygame.display.set_icon(pygame.image.load("assets/textures/player/t_idle.png"))
+pygame.display.set_icon(pygame.image.load("assets/textures/icon.png"))
 clock = pygame.time.Clock()
 
 running = True
@@ -34,7 +34,11 @@ load = {
         "billboards":[],
         "textures":[],
         "hitboxes":[],
-        "spawn":[0,0]
+        "spawn":{
+            "position":[0,0],
+            "keys":["m_n","m_e","m_s","m_w"],
+            "texture":"idle"
+        }
     },
     "menu":{
         "index":1,
@@ -42,13 +46,20 @@ load = {
         "buttons":[]
     },
     "player":{
-        "position":[0,0]
+        "position":[0,0],
+        "keys":["m_n","m_e","m_s","m_w"],
+        "texture":"idle"
     },
     "framecount":0
 }
 
 textures = {
-    "plr_idle":"assets/textures/player/t_idle.png"
+    "plr_idle":"assets/textures/player/idle.png",
+    "plr_damage":"assets/textures/player/damage.png",
+    "plr_move_n":"assets/textures/player/walk_n.png",
+    "plr_move_e":"assets/textures/player/walk_e.png",
+    "plr_move_s":"assets/textures/player/walk_s.png",
+    "plr_move_w":"assets/textures/player/walk_w.png",
 }
 for i in range(len(list(textures.keys()))):
     textures[list(textures.keys())[i]] = pygame.transform.scale_by(
@@ -68,25 +79,53 @@ def check_collision(pos:tuple[int]) -> bool:
     else:
         return load["map"]["hitboxes"][pos[1]][pos[0]]
 
-def plr_move(pos:tuple[int]):
-    if check_collision((load["player"]["position"][0] + pos[0],load["player"]["position"][1] + pos[1])):
-        pass
-    else:
-        load["player"]["position"][0] += pos[0]
-        load["player"]["position"][1] += pos[1]
+def plr_damage():
+    pass
 
-    # check things
-    for z in range(len(load["map"]["textures"])):
-        if 5 == load["map"]["textures"][z][load["player"]["position"][1]][load["player"]["position"][0]]:
-            print("Level finished!")
-            change_menu(1)
+def plr_move(pos:tuple[int]):
+    global load
+    # check key
+    has_key = False
+    if pos == (0,-1):
+        if "m_n" in load["player"]["keys"]:
+            has_key = True
+            load["player"]["texture"] = "move_n"
+        else:
+            plr_damage()
+    elif pos == (1,0):
+        if "m_e" in load["player"]["keys"]:
+            has_key = True
+            load["player"]["texture"] = "move_e"
+        else:
+            plr_damage()
+    elif pos == (0,1):
+        if "m_s" in load["player"]["keys"]:
+            has_key = True
+            load["player"]["texture"] = "move_s"
+        else:
+            plr_damage()
+    elif pos == (-1,0):
+        if "m_w" in load["player"]["keys"]:
+            has_key = True
+            load["player"]["texture"] = "move_w"
+        else:
+            plr_damage()
+
+    # move and collide and balls
+    if has_key:
+        if check_collision((load["player"]["position"][0] + pos[0],load["player"]["position"][1] + pos[1])):
+            pass
+        else:
+            load["player"]["position"][0] += pos[0]
+            load["player"]["position"][1] += pos[1]
 
 
 def load_map(map) -> None:
+    global load
+    print("map loaded")
     load["map"] = map
-    load["player"] = {
-        "position":map["spawn"]
-    }
+    load["player"] = copy.deepcopy(map["spawn"])
+    load["player"]["texture"] = "idle"
 
 def make_text(text:str,size:int=30,color:tuple[int,int,int]=(0,0,0)) -> pygame.Surface:
     return pygame.font.SysFont("Arial",size).render(text,True,color)
@@ -255,7 +294,12 @@ while running:
 
     # map render    
     elif load["menu"]["index"] == 0:
-        # render bg
+
+        # check blocs
+        for z in range(len(load["map"]["textures"])):
+            if 5 == load["map"]["textures"][z][load["player"]["position"][1]][load["player"]["position"][0]]:
+                print("Level finished!")
+                change_menu(1)
 
         # render map
         for z in range(len(load["map"]["textures"])):
@@ -286,7 +330,7 @@ while running:
 
         # render player
         screen.blit(
-            textures["plr_idle"],
+            textures[f"plr_{load["player"]["texture"]}"],
             (350-BLOCK_SIZE[0]/2, 350-BLOCK_SIZE[1]/2)
         )
 
@@ -298,6 +342,11 @@ while running:
 
     # framecount
     load["framecount"] += 1
+
+
+
+    print(load["map"]["spawn"])
+    print(load["player"])
 
 
 

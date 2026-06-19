@@ -23,7 +23,10 @@
                 [false,false,false],
                 [false,false,false]
             ],
-            "spawn":[1,1]
+            "spawn":{
+                "position":[1,1],
+                "keys":["m_n","m_e","m_s","m_w"]
+            }
         }
     },{
         "name":"Ai Slop",
@@ -58,41 +61,91 @@
                 [false,false,false,true,true,true,false,false,true,false,false,true,true,true,false,false],
                 [true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true]
             ],
-            "spawn":[2,2]
-        }
-    },{
-            "name":"G of Doom",
-            "context":"The first level to ever exist in this game!!! Used for testing layering and collision",
-            "map":{
-                "billboards":[
-                    [{"position":[1,1],"texture":"assets/textures/billboards/bill.png"}]
-                ],
-                "textures":[
-                    [
-                        [2,2,2,2,2,2],
-                        [2,3,3,3,3,2],
-                        [2,3,2,2,2,2],
-                        [2,3,2,2,3,2],
-                        [2,3,3,3,2,2],
-                        [2,2,2,2,2,2]
-                    ],[
-                        [0,0,0,0,0,4],
-                        [4,0,0,0,0,0],
-                        [0,0,0,4,0,0],
-                        [0,0,5,0,0,0],
-                        [0,0,0,0,1,0],
-                        [0,4,0,0,0,4]
-                    ]
-                ],
-                "hitboxes":[
-                    [false,false,false,false,false,false],
-                    [false,true,true,true,true,false],
-                    [false,true,false,false,false,false],
-                    [false,true,false,false,true,false],
-                    [false,true,true,true,false,false],
-                    [false,false,false,false,false,false]
-                ],
-                "spawn":[0,0]
+            "spawn":{
+                "position":[2,2],
+                "keys":["m_n","m_e","m_s","m_w"]
             }
         }
+    },{
+        "name":"Ai Slop 2",
+        "context":"I told an ai to make a level AGAIN and this came out",
+        "map":{
+            "billboards":[],
+            "textures":[
+                [
+                    [0,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0],
+                    [0,0,0,0,0,2,2,2,4,2,2,0,0,0,0,0],
+                    [0,0,0,0,0,2,2,2,2,2,2,2,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,3,3,3,0,0,6,0,0,3,3,3,0,0],
+                    [0,0,0,3,3,3,0,0,3,0,0,3,3,3,0,0],
+                    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+                ],[
+                    [0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,0],
+                    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+                ]
+            ],
+            "hitboxes":[
+                [false,false,false,false,false,false,true,true,true,true,false,false,false,false,false,false],
+                [false,false,false,false,false,true,true,true,false,true,true,false,false,false,false,false],
+                [false,false,false,false,false,true,true,true,true,true,true,true,false,false,false,false],
+                [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+                [false,false,false,true,true,true,false,false,true,false,false,true,true,true,false,false],
+                [false,false,false,true,true,true,false,false,true,false,false,true,true,true,false,false],
+                [true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true],
+                [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+                [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]
+            ],
+            "spawn":{
+                "position":[5,0],
+                "keys":["m_n","m_e","m_s","m_w"]
+            }
+        }
+    },{
+        "name":"G of Doom",
+        "context":"The first level to ever exist in this game!!! Used for testing layering and collision",
+        "map":{
+            "billboards":[
+                [{"position":[1,1],"texture":"assets/textures/billboards/bill.png"}]
+            ],
+            "textures":[
+                [
+                    [2,2,2,2,2,2],
+                    [2,3,3,3,3,2],
+                    [2,3,2,2,2,2],
+                    [2,3,2,2,3,2],
+                    [2,3,3,3,2,2],
+                    [2,2,2,2,2,2]
+                ],[
+                    [0,0,0,0,0,4],
+                    [4,0,0,0,0,0],
+                    [0,0,0,4,0,0],
+                    [0,0,5,0,0,0],
+                    [0,0,0,0,1,0],
+                    [0,4,0,0,0,4]
+                ]
+            ],
+            "hitboxes":[
+                [false,false,false,false,false,false],
+                [false,true,true,true,true,false],
+                [false,true,false,false,false,false],
+                [false,true,false,false,true,false],
+                [false,true,true,true,false,false],
+                [false,false,false,false,false,false]
+            ],
+            "spawn":{
+                "position":[0,0],
+                "keys":["m_n","m_e","m_s","m_w"]
+            }
+        }
+    }
 ]
