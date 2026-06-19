@@ -112,7 +112,7 @@
         }
     },{
         "name":"G of Doom",
-        "context":"The first level to ever exist in this game!!! Used for testing layering and collision",
+        "context":"The first level to ever exist in this game!!!",
         "map":{
             "billboards":[
                 [{"position":[1,1],"texture":"assets/textures/billboards/bill.png"}]

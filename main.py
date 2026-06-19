@@ -7,7 +7,7 @@ SCALE_FACTOR = (BLOCK_SIZE[0]/16, BLOCK_SIZE[1]/16)
 
 OLD_BUTTON_SYSTEM = False
 
-GAME_NAME = "Numpad Clash | PRE 1.2.1"
+GAME_NAME = "Numpad Clash | PRE 1.2.2"
 import pygame
 pygame.init()
 screen = pygame.display.set_mode(SCREEN_SIZE)
@@ -128,7 +128,7 @@ def load_map(map) -> None:
     load["player"]["texture"] = "idle"
 
 def make_text(text:str,size:int=30,color:tuple[int,int,int]=(0,0,0)) -> pygame.Surface:
-    return pygame.font.Font("assets/font.ttf",size).render(text,True,color)
+    return pygame.font.Font("assets/font.ttf",int(size/1.5)).render(text,True,color)
 
 def change_menu(index:int) -> None:
     global load
@@ -139,40 +139,40 @@ def press_menubutton(index:int,menu:int) -> None:
     global load, running
     if menu == 1:
         if index == 0:
-            change_menu(3)
+            change_menu(4)
         elif index == 1:
             pass
         elif index == 2:
-            change_menu(2)
+            change_menu(3)
         elif index == 3:
             running = False
-    elif menu == 2:
-        if index == 0:
-            change_menu(1)
     elif menu == 3:
         if index == 0:
             change_menu(1)
-        elif index == 1:
-            change_menu(5)
-        elif index == 2:
-            change_menu(6)
-        elif index == 3:
-            change_menu(4)
     elif menu == 4:
         if index == 0:
-            change_menu(3)
+            change_menu(1)
+        elif index == 1:
+            change_menu(6)
+        elif index == 2:
+            change_menu(7)
+        elif index == 3:
+            change_menu(5)
+    elif menu == 5:
+        if index == 0:
+            change_menu(4)
         else:
             load_map(jsons["save_main"]["maps"][index-1]["map"])
             change_menu(0)
-    elif menu == 5:
+    elif menu == 6:
         if index == 0:
-            change_menu(3)
+            change_menu(4)
         else:
             load_map(jsons["story_maps"][index-1]["map"])
             change_menu(0)
-    elif menu == 6:
+    elif menu == 7:
         if index == 0:
-            change_menu(3)
+            change_menu(4)
         else:
             load_map(jsons["bonus_maps"][index-1]["map"])
             change_menu(0)
@@ -223,25 +223,25 @@ while running:
     elif load["menu"]["index"] == 1:
         load["menu"]["buttons"] = ["Play","Settings","Level Editor","Quit"]
 
-    elif load["menu"]["index"] == 2:
+    elif load["menu"]["index"] == 3:
         load["menu"]["buttons"] = ["Back","New Level"]
         for map in jsons["save_main"]["maps"]:
             load["menu"]["buttons"].append(f'Edit "{map["name"]}"')
     
-    elif load["menu"]["index"] == 3:
+    elif load["menu"]["index"] == 4:
         load["menu"]["buttons"] = ["Back","Story Mode","Bonus Levels","Custom Levels"]
 
-    elif load["menu"]["index"] == 4:
+    elif load["menu"]["index"] == 5:
         load["menu"]["buttons"] = ["Back"]
         for map in jsons["save_main"]["maps"]:
             load["menu"]["buttons"].append(f'Play "{map["name"]}"')
     
-    elif load["menu"]["index"] == 5:
+    elif load["menu"]["index"] == 6:
         load["menu"]["buttons"] = ["Back"]
         for map in jsons["story_maps"]:
             load["menu"]["buttons"].append(f'Play "{map["name"]}"')
 
-    elif load["menu"]["index"] == 6:
+    elif load["menu"]["index"] == 7:
         load["menu"]["buttons"] = ["Back"]
         for map in jsons["bonus_maps"]:
             load["menu"]["buttons"].append(f'Play "{map["name"]}"')
@@ -268,23 +268,23 @@ while running:
             screen.blit(make_text(f"Button: {load["menu"]["buttons"][load["menu"]["menu_index"]]}"),(0,60))
             screen.blit(make_text("This is a placeholder btw"),(0,90))
         else:
-
+            # render buttons
             for i in range(len(load["menu"]["buttons"])):
                 if i == load["menu"]["menu_index"]:
                     screen.blit(
                         make_text(f"> {load["menu"]["buttons"][i]}",30),
-                        (40,40+i*40)
+                        (40,40+i*30)
                     )
                 else:
                     screen.blit(
                         make_text(f"  {load["menu"]["buttons"][i]}",30),
-                        (40,40+i*40)
+                        (40,40+i*30)
                     )
         
         # special menu render
-        if load["menu"]["index"] == 2:
+        if load["menu"]["index"] == 3:
             screen.blit(make_text("I didnt code the level editor yet lol",color=(255,0,0)),(200,400))
-        elif load["menu"]["index"] == 6:
+        elif load["menu"]["index"] == 7:
             if load["menu"]["menu_index"] == 0:
                 pass
             else:
