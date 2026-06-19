@@ -6,9 +6,12 @@ BLOCK_SIZE = (SCREEN_SIZE[0]/10,SCREEN_SIZE[1]/10)
 SCALE_FACTOR = (BLOCK_SIZE[0]/16, BLOCK_SIZE[1]/16)
 
 OLD_BUTTON_SYSTEM = False
+OLD_PLAY_SYSTEM = True
+GAME_NAME = "Numpad Clash | PRE 1.2.3"
 
-GAME_NAME = "Numpad Clash | PRE 1.2.2"
 import pygame
+ANY_KEY = [pygame.K_KP0,pygame.K_KP1,pygame.K_KP2,pygame.K_KP3,pygame.K_KP4,pygame.K_KP5,pygame.K_KP6,pygame.K_KP7,pygame.K_KP8,pygame.K_KP9]
+
 pygame.init()
 screen = pygame.display.set_mode(SCREEN_SIZE)
 pygame.display.set_caption(f"{GAME_NAME} (Loading...)")
@@ -39,6 +42,9 @@ load = {
             "keys":["m_n","m_e","m_s","m_w"],
             "texture":"idle"
         }
+    },
+    "premap":{
+        "name":"Error Pre Map"
     },
     "menu":{
         "index":1,
@@ -127,6 +133,18 @@ def load_map(map) -> None:
     load["player"] = copy.deepcopy(map["spawn"])
     load["player"]["texture"] = "idle"
 
+def play_map(map,name:str) -> None:
+    global load
+    if OLD_PLAY_SYSTEM:
+        load_map(map)
+        change_menu(0)
+    else:
+        load_map(map)
+        load["premap"]["name"] = name
+        change_menu(2)
+
+
+
 def make_text(text:str,size:int=30,color:tuple[int,int,int]=(0,0,0)) -> pygame.Surface:
     return pygame.font.Font("assets/font.ttf",int(size/1.5)).render(text,True,color)
 
@@ -162,20 +180,17 @@ def press_menubutton(index:int,menu:int) -> None:
         if index == 0:
             change_menu(4)
         else:
-            load_map(jsons["save_main"]["maps"][index-1]["map"])
-            change_menu(0)
+            play_map(jsons["save_main"]["maps"][index-1]["map"],jsons["save_main"][index-1]["name"])
     elif menu == 6:
         if index == 0:
             change_menu(4)
         else:
-            load_map(jsons["story_maps"][index-1]["map"])
-            change_menu(0)
+            play_map(jsons["story_maps"][index-1]["map"],jsons["story_maps"][index-1]["name"])
     elif menu == 7:
         if index == 0:
             change_menu(4)
         else:
-            load_map(jsons["bonus_maps"][index-1]["map"])
-            change_menu(0)
+            play_map(jsons["bonus_maps"][index-1]["map"],jsons["bonus_maps"][index-1]["name"])
 
 while running:
 
@@ -190,7 +205,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.KEYDOWN:
-            if load["menu"]["index"] == 0:
+            if load["menu"]["index"] == 0: # ingame
                 if event.key == pygame.K_KP0: # quit to main menu
                     change_menu(1)
 
@@ -203,7 +218,11 @@ while running:
                 elif event.key == pygame.K_KP8: # up
                     plr_move((0,-1))
             
-            elif jsons["props_menus"][load["menu"]["index"]]["button"]:
+            elif load["menu"]["index"] == 2: # pre ingame
+                if event.key in ANY_KEY:
+                    change_menu(0)
+            
+            elif jsons["props_menus"][load["menu"]["index"]]["button"]: # menu
 
                 if event.key == pygame.K_KP5: # press
                     press_menubutton(load["menu"]["menu_index"],load["menu"]["index"])
@@ -333,6 +352,12 @@ while running:
             textures[f"plr_{load["player"]["texture"]}"],
             (350-BLOCK_SIZE[0]/2, 350-BLOCK_SIZE[1]/2)
         )
+    
+    elif load["menu"]["index"] == 2: # pre ingame
+
+        screen.fill((0,0,0))
+        screen.blit(make_text(f"-{load["premap"]["name"]}-",50,(255,255,255)),(50,50))
+        screen.blit(textures["plr_idle"],(50,100))
 
     # fps and more
     screen.blit(make_text(f"FPS: {round(clock.get_fps()*100)/100}",15,(80,80,80)),(0,0))
