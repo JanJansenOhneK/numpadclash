@@ -7,7 +7,7 @@ SCALE_FACTOR = (BLOCK_SIZE[0]/16, BLOCK_SIZE[1]/16)
 
 OLD_BUTTON_SYSTEM = False
 
-GAME_NAME = "Numpad Clash | PRE 1.2.0"
+GAME_NAME = "Numpad Clash | PRE 1.2.1"
 import pygame
 pygame.init()
 screen = pygame.display.set_mode(SCREEN_SIZE)
@@ -128,7 +128,7 @@ def load_map(map) -> None:
     load["player"]["texture"] = "idle"
 
 def make_text(text:str,size:int=30,color:tuple[int,int,int]=(0,0,0)) -> pygame.Surface:
-    return pygame.font.SysFont("Arial",size).render(text,True,color)
+    return pygame.font.Font("assets/font.ttf",size).render(text,True,color)
 
 def change_menu(index:int) -> None:
     global load
@@ -272,12 +272,12 @@ while running:
             for i in range(len(load["menu"]["buttons"])):
                 if i == load["menu"]["menu_index"]:
                     screen.blit(
-                        make_text(f"--> {load["menu"]["buttons"][i]}",30),
+                        make_text(f"> {load["menu"]["buttons"][i]}",30),
                         (40,40+i*40)
                     )
                 else:
                     screen.blit(
-                        make_text(f"      {load["menu"]["buttons"][i]}",30),
+                        make_text(f"  {load["menu"]["buttons"][i]}",30),
                         (40,40+i*40)
                     )
         
@@ -342,12 +342,6 @@ while running:
 
     # framecount
     load["framecount"] += 1
-
-
-
-    print(load["map"]["spawn"])
-    print(load["player"])
-
 
 
 
