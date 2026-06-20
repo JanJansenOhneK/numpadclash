@@ -3,6 +3,7 @@
     "maps":[
         {
             "name":"G of Doom",
+            "context":"The first level to ever exist in this game!!!",
             "map":{
                 "billboards":[
                     [{"position":[1,1],"texture":"assets/textures/billboards/bill.png"}]
@@ -24,13 +25,15 @@
                         [0,4,0,0,0,4]
                     ]
                 ],
-                "hitboxes":[
-                    [false,false,false,false,false,false],
-                    [false,true,true,true,true,false],
-                    [false,true,false,false,false,false],
-                    [false,true,false,false,true,false],
-                    [false,true,true,true,false,false],
-                    [false,false,false,false,false,false]
+                "elements":[
+                    [
+                        [0,0,0,0,0,0],
+                        [0,1,1,1,1,0],
+                        [0,1,0,0,0,0],
+                        [0,1,0,0,1,0],
+                        [0,1,1,1,0,0],
+                        [0,0,0,0,0,0]
+                    ]
                 ],
                 "spawn":{
                     "position":[0,0],

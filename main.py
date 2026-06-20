@@ -6,8 +6,8 @@ BLOCK_SIZE = (SCREEN_SIZE[0]/10,SCREEN_SIZE[1]/10)
 SCALE_FACTOR = (BLOCK_SIZE[0]/16, BLOCK_SIZE[1]/16)
 
 OLD_BUTTON_SYSTEM = False
-OLD_PLAY_SYSTEM = True
-GAME_NAME = "Numpad Clash | PRE 1.2.3"
+OLD_PLAY_SYSTEM = False
+GAME_NAME = "Numpad Clash | PRE 1.3.0"
 
 import pygame
 ANY_KEY = [pygame.K_KP0,pygame.K_KP1,pygame.K_KP2,pygame.K_KP3,pygame.K_KP4,pygame.K_KP5,pygame.K_KP6,pygame.K_KP7,pygame.K_KP8,pygame.K_KP9]
@@ -22,6 +22,7 @@ running = True
 
 jsons_files = {
     "props_blocks":open("assets/blockproperties.json","r"),
+    "props_elements":open("assets/blockproperties.json","r"),
     "props_menus":open("assets/menus.json","r"),
     "story_maps":open("assets/maps.json","r"),
     "bonus_maps":open("assets/bonusmaps.json","r"),
@@ -36,7 +37,7 @@ load = {
     "map":{
         "billboards":[],
         "textures":[],
-        "hitboxes":[],
+        "elements":[],
         "spawn":{
             "position":[0,0],
             "keys":["m_n","m_e","m_s","m_w"],
@@ -73,20 +74,28 @@ for i in range(len(list(textures.keys()))):
         SCALE_FACTOR # change
     )
 
-def check_collision(pos:tuple[int]) -> bool:
-    if pos[0] < 0:
-        return True
-    elif pos[1] < 0:
-        return True
-    elif pos[0] > len(load["map"]["hitboxes"][0]) - 1:
-        return True
-    elif pos[1] > len(load["map"]["hitboxes"]) - 1:
-        return True
-    else:
-        return load["map"]["hitboxes"][pos[1]][pos[0]]
 
 def plr_damage():
     pass
+
+def check_collision(pos:tuple[int]) -> bool:
+    returner = False
+
+    if pos[0] < 0:
+        returner = True
+    elif pos[1] < 0:
+        returner = True
+    elif pos[0] > len(load["map"]["elements"][0][0]) - 1:
+        returner = True
+    elif pos[1] > len(load["map"]["elements"][0]) - 1:
+        returner = True
+    else:
+
+        for z in range(len(load["map"]["elements"])):
+            if load["map"]["elements"][z][pos[1]][pos[0]] == 1:
+                returner = True
+
+    return returner
 
 def plr_move(pos:tuple[int]):
     global load
@@ -125,7 +134,6 @@ def plr_move(pos:tuple[int]):
             load["player"]["position"][0] += pos[0]
             load["player"]["position"][1] += pos[1]
 
-
 def load_map(map) -> None:
     global load
     print("map loaded")
@@ -142,8 +150,6 @@ def play_map(map,name:str) -> None:
         load_map(map)
         load["premap"]["name"] = name
         change_menu(2)
-
-
 
 def make_text(text:str,size:int=30,color:tuple[int,int,int]=(0,0,0)) -> pygame.Surface:
     return pygame.font.Font("assets/font.ttf",int(size/1.5)).render(text,True,color)
@@ -191,6 +197,15 @@ def press_menubutton(index:int,menu:int) -> None:
             change_menu(4)
         else:
             play_map(jsons["bonus_maps"][index-1]["map"],jsons["bonus_maps"][index-1]["name"])
+
+
+def check_elements() -> None:
+    for z in range(len(load["map"]["elements"])):
+        if load["map"]["elements"][z][load["player"]["position"][1]][load["player"]["position"][0]] == 2:
+            print("goal reached!")
+            change_menu(1)
+            return None
+            
 
 while running:
 
@@ -314,11 +329,8 @@ while running:
     # map render    
     elif load["menu"]["index"] == 0:
 
-        # check blocs
-        for z in range(len(load["map"]["textures"])):
-            if 5 == load["map"]["textures"][z][load["player"]["position"][1]][load["player"]["position"][0]]:
-                print("Level finished!")
-                change_menu(1)
+        # check elements
+        check_elements()
 
         # render map
         for z in range(len(load["map"]["textures"])):
@@ -354,7 +366,6 @@ while running:
         )
     
     elif load["menu"]["index"] == 2: # pre ingame
-
         screen.fill((0,0,0))
         screen.blit(make_text(f"-{load["premap"]["name"]}-",50,(255,255,255)),(50,50))
         screen.blit(textures["plr_idle"],(50,100))
