@@ -7,7 +7,7 @@ SCALE_FACTOR = (BLOCK_SIZE[0]/16, BLOCK_SIZE[1]/16)
 
 OLD_BUTTON_SYSTEM = False
 OLD_PLAY_SYSTEM = False
-GAME_NAME = "Numpad Clash | PRE 1.3.0"
+GAME_NAME = "Numpad Clash | PRE 1.4.0"
 
 import pygame
 ANY_KEY = [pygame.K_KP0,pygame.K_KP1,pygame.K_KP2,pygame.K_KP3,pygame.K_KP4,pygame.K_KP5,pygame.K_KP6,pygame.K_KP7,pygame.K_KP8,pygame.K_KP9]
@@ -45,7 +45,11 @@ load = {
         }
     },
     "premap":{
-        "name":"Error Pre Map"
+        "name":"Error Pre Map",
+        "type":0
+        # 0 Story Mode
+        # 1 Bonus
+        # 2 Custom
     },
     "menu":{
         "index":1,
@@ -60,20 +64,11 @@ load = {
     "framecount":0
 }
 
-textures = {
-    "plr_idle":"assets/textures/player/idle.png",
-    "plr_damage":"assets/textures/player/damage.png",
-    "plr_move_n":"assets/textures/player/walk_n.png",
-    "plr_move_e":"assets/textures/player/walk_e.png",
-    "plr_move_s":"assets/textures/player/walk_s.png",
-    "plr_move_w":"assets/textures/player/walk_w.png",
-}
-for i in range(len(list(textures.keys()))):
-    textures[list(textures.keys())[i]] = pygame.transform.scale_by(
-        pygame.image.load(list(textures.values())[i]),
+def load_texture(texture) -> pygame.Surface:
+    return pygame.transform.scale_by(
+        pygame.image.load(f"{texture}"),
         SCALE_FACTOR # change
     )
-
 
 def plr_damage():
     pass
@@ -127,6 +122,7 @@ def plr_move(pos:tuple[int]):
             plr_damage()
 
     # move and collide and balls
+    # nvm no balls
     if has_key:
         if check_collision((load["player"]["position"][0] + pos[0],load["player"]["position"][1] + pos[1])):
             pass
@@ -186,25 +182,30 @@ def press_menubutton(index:int,menu:int) -> None:
         if index == 0:
             change_menu(4)
         else:
-            play_map(jsons["save_main"]["maps"][index-1]["map"],jsons["save_main"][index-1]["name"])
+            load["premap"]["type"] = 2
+            play_map(jsons["save_main"]["maps"][index-1]["map"],jsons["save_main"]["maps"][index-1]["name"])
     elif menu == 6:
         if index == 0:
             change_menu(4)
         else:
+            load["premap"]["type"] = 0
             play_map(jsons["story_maps"][index-1]["map"],jsons["story_maps"][index-1]["name"])
     elif menu == 7:
         if index == 0:
             change_menu(4)
         else:
+            load["premap"]["type"] = 1
             play_map(jsons["bonus_maps"][index-1]["map"],jsons["bonus_maps"][index-1]["name"])
 
 
 def check_elements() -> None:
     for z in range(len(load["map"]["elements"])):
-        if load["map"]["elements"][z][load["player"]["position"][1]][load["player"]["position"][0]] == 2:
+        if load["map"]["elements"][z] [load["player"]["position"][1]] [load["player"]["position"][0]] == 2:
             print("goal reached!")
             change_menu(1)
             return None
+    
+    return None
             
 
 while running:
@@ -221,8 +222,13 @@ while running:
             running = False
         elif event.type == pygame.KEYDOWN:
             if load["menu"]["index"] == 0: # ingame
-                if event.key == pygame.K_KP0: # quit to main menu
-                    change_menu(1)
+                if event.key == pygame.K_KP0: # quit to menu
+                    if load["premap"]["type"] == 0:
+                        change_menu(6)
+                    elif load["premap"]["type"] == 1:
+                        change_menu(7)
+                    elif load["premap"]["type"] == 2:
+                        change_menu(5)
 
                 elif event.key == pygame.K_KP6: # right
                     plr_move((1,0))
@@ -324,7 +330,6 @@ while running:
             else:
                 screen.blit(make_text(f"{jsons["bonus_maps"][load["menu"]["menu_index"]-1]["context"]}",size=15),(40,400))
 
-    
 
     # map render    
     elif load["menu"]["index"] == 0:
@@ -336,39 +341,49 @@ while running:
         for z in range(len(load["map"]["textures"])):
             for y in range(len(load["map"]["textures"][z])):
                 for x in range(len(load["map"]["textures"][z][y])):
-                    block_texture = jsons["props_blocks"][load["map"]["textures"][z][y][x]]["texture"]
-                    block_texture = pygame.image.load(block_texture)
-                    block_texture = pygame.transform.scale(block_texture,BLOCK_SIZE)
-                    block_pos = [
-                        (-1 * load["player"]["position"][0] + x)*BLOCK_SIZE[0] + (350-BLOCK_SIZE[0]/2),
-                        (-1 * load["player"]["position"][1] + y)*BLOCK_SIZE[1] + (350-BLOCK_SIZE[1]/2)
-                    ]
-                    screen.blit(block_texture,block_pos)
+                    screen.blit(
+                        load_texture(jsons["props_blocks"][load["map"]["textures"][z][y][x]]["texture"]),
+                        [
+                            (-1 * load["player"]["position"][0] + x)*BLOCK_SIZE[0] + (350-BLOCK_SIZE[0]/2),
+                            (-1 * load["player"]["position"][1] + y)*BLOCK_SIZE[1] + (350-BLOCK_SIZE[1]/2)
+                        ]
+                    )
                     
         # render billboards
         for z in range(len(load["map"]["billboards"])):
             for i in range(len(load["map"]["billboards"][z])):
+                screen.blit(
+                    load_texture(load["map"]["billboards"][z][i]["texture"]),
+                    [
+                        (-1 * load["player"]["position"][0] + load["map"]["billboards"][z][i]["position"][0]) * BLOCK_SIZE[0] + (350-BLOCK_SIZE[0]/2) ,
+                        (-1 * load["player"]["position"][1] + load["map"]["billboards"][z][i]["position"][1]) * BLOCK_SIZE[1] + (350-BLOCK_SIZE[1]/2)
+                    ]
+                )
+    
 
-                billboard_texture = load["map"]["billboards"][z][i]["texture"]
-                billboard_texture = pygame.image.load(billboard_texture)
-                billboard_texture = pygame.transform.scale_by(billboard_texture,SCALE_FACTOR)
-                
-                billboard_pos = [
-                    (-1 * load["player"]["position"][0] + load["map"]["billboards"][z][i]["position"][0]) * BLOCK_SIZE[0] + (350-BLOCK_SIZE[0]/2) ,
-                    (-1 * load["player"]["position"][1] + load["map"]["billboards"][z][i]["position"][1]) * BLOCK_SIZE[1] + (350-BLOCK_SIZE[1]/2)
-                ]
-                screen.blit(billboard_texture,billboard_pos)
+    elif load["menu"]["index"] == 2: # pre ingame
+        screen.fill((50,50,50))
+        screen.blit(make_text(f"-{load["premap"]["name"]}-",50,(255,255,255)),(50,50))
+        screen.blit(make_text(f"Press any key to start",20,(255,255,255)),(50,500))
+        screen.blit(make_text(f"Keys:",30,(255,255,255)),(50,150))
+        for i in range(len(load["player"]["keys"])):
+            screen.blit(
+                load_texture(f"assets/textures/keys/{load["player"]["keys"][i]}.png"),
+                [i*50+50,200]
+            )
 
-        # render player
+
+    # render player
+    if load["menu"]["index"] == 0:
         screen.blit(
-            textures[f"plr_{load["player"]["texture"]}"],
+            load_texture(f"assets/textures/player/{load["player"]["texture"]}.png"),
             (350-BLOCK_SIZE[0]/2, 350-BLOCK_SIZE[1]/2)
         )
-    
-    elif load["menu"]["index"] == 2: # pre ingame
-        screen.fill((0,0,0))
-        screen.blit(make_text(f"-{load["premap"]["name"]}-",50,(255,255,255)),(50,50))
-        screen.blit(textures["plr_idle"],(50,100))
+    elif load["menu"]["index"] == 2:
+        screen.blit(
+            load_texture(f"assets/textures/player/idle.png"),
+            (350-BLOCK_SIZE[0]/2, 350-BLOCK_SIZE[1]/2)
+        )
 
     # fps and more
     screen.blit(make_text(f"FPS: {round(clock.get_fps()*100)/100}",15,(80,80,80)),(0,0))
@@ -378,8 +393,6 @@ while running:
 
     # framecount
     load["framecount"] += 1
-
-
 
 # close files
 for i in range(len(list(jsons_files.keys()))):
