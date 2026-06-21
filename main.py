@@ -9,7 +9,7 @@ OLD_BUTTON_SYSTEM = False
 OLD_PLAY_SYSTEM = False
 OLD_LOAD_SYSTEM = False
 CHANGE_FILES = True
-GAME_NAME = "Numpad Clash | PRE 1.5.1"
+GAME_NAME = "Numpad Clash | PRE 1.5.2"
 
 import pygame
 ANY_KEY = [pygame.K_KP0,pygame.K_KP1,pygame.K_KP2,pygame.K_KP3,pygame.K_KP4,pygame.K_KP5,pygame.K_KP6,pygame.K_KP7,pygame.K_KP8,pygame.K_KP9]
@@ -210,6 +210,7 @@ def press_menubutton(index:int,menu:int) -> None:
         if index == 0:
             change_menu(1)
         elif index == 1:
+            print("deleting savefile!!")
             jsons["save_main"] = copy.deepcopy(jsons["save_empty"])
 
 def exit_level() -> None:
@@ -298,18 +299,27 @@ while running:
 
     elif load["menu"]["index"] == 5:
         load["menu"]["buttons"] = ["Back"]
-        for map in jsons["save_main"]["maps"]:
-            load["menu"]["buttons"].append(f'Play "{map["name"]}"')
+        for i,map in enumerate(jsons["save_main"]["maps"]):
+            if i in jsons["save_main"]["completed"][2]:
+                load["menu"]["buttons"].append(f'[X] {map["name"]}')
+            else:
+                load["menu"]["buttons"].append(f'[ ] {map["name"]}')
     
     elif load["menu"]["index"] == 6:
         load["menu"]["buttons"] = ["Back"]
-        for map in jsons["story_maps"]:
-            load["menu"]["buttons"].append(f'Play "{map["name"]}"')
+        for i,map in enumerate(jsons["story_maps"]):
+            if i in jsons["save_main"]["completed"][0]:
+                load["menu"]["buttons"].append(f'[X] {map["name"]}')
+            else:
+                load["menu"]["buttons"].append(f'[ ] {map["name"]}')
 
     elif load["menu"]["index"] == 7:
         load["menu"]["buttons"] = ["Back"]
-        for map in jsons["bonus_maps"]:
-            load["menu"]["buttons"].append(f'Play "{map["name"]}"')
+        for i,map in enumerate(jsons["bonus_maps"]):
+            if i in jsons["save_main"]["completed"][1]:
+                load["menu"]["buttons"].append(f'[X] {map["name"]}')
+            else:
+                load["menu"]["buttons"].append(f'[ ] {map["name"]}')
     
     elif load["menu"]["index"] == 8:
         load["menu"]["buttons"] = ["Back","Reset Savefile"]
@@ -430,6 +440,8 @@ while running:
     # framecount
     load["framecount"] += 1
 
+print("closing...")
+
 # change files
 for i in range(len(list(jsons_files.keys()))):
 
@@ -452,4 +464,6 @@ for i in range(len(list(jsons_files.keys()))):
 for i in range(len(list(jsons_files.keys()))):
     jsons_files[list(jsons_files.keys())[i]].close()
 
+# bye
 pygame.quit()
+print("bye")
