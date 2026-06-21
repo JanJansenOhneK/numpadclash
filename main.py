@@ -7,7 +7,9 @@ SCALE_FACTOR = (BLOCK_SIZE[0]/16, BLOCK_SIZE[1]/16)
 
 OLD_BUTTON_SYSTEM = False
 OLD_PLAY_SYSTEM = False
-GAME_NAME = "Numpad Clash | PRE 1.4.0"
+OLD_LOAD_SYSTEM = False
+CHANGE_FILES = True
+GAME_NAME = "Numpad Clash | PRE 1.5.0"
 
 import pygame
 ANY_KEY = [pygame.K_KP0,pygame.K_KP1,pygame.K_KP2,pygame.K_KP3,pygame.K_KP4,pygame.K_KP5,pygame.K_KP6,pygame.K_KP7,pygame.K_KP8,pygame.K_KP9]
@@ -31,7 +33,10 @@ jsons_files = {
 
 jsons = {}
 for i in range(len(list(jsons_files.keys()))):
-    jsons[list(jsons_files.keys())[i]] = json.loads(list(jsons_files.values())[i].read())
+    if OLD_LOAD_SYSTEM:
+        jsons[list(jsons_files.keys())[i]] = json.loads(list(jsons_files.values())[i].read())
+    else:
+        jsons[list(jsons_files.keys())[i]] = json.load(list(jsons_files.values())[i])
 
 load = {
     "map":{
@@ -45,11 +50,12 @@ load = {
         }
     },
     "premap":{
-        "name":"Error Pre Map",
-        "type":0
+        "name":"This is a bug!!",
+        "type":0,
         # 0 Story Mode
         # 1 Bonus
         # 2 Custom
+        "index":0
     },
     "menu":{
         "index":1,
@@ -183,26 +189,45 @@ def press_menubutton(index:int,menu:int) -> None:
             change_menu(4)
         else:
             load["premap"]["type"] = 2
+            load["premap"]["index"] = index-1
             play_map(jsons["save_main"]["maps"][index-1]["map"],jsons["save_main"]["maps"][index-1]["name"])
     elif menu == 6:
         if index == 0:
             change_menu(4)
         else:
             load["premap"]["type"] = 0
+            load["premap"]["index"] = index-1
             play_map(jsons["story_maps"][index-1]["map"],jsons["story_maps"][index-1]["name"])
     elif menu == 7:
         if index == 0:
             change_menu(4)
         else:
             load["premap"]["type"] = 1
+            load["premap"]["index"] = index-1
             play_map(jsons["bonus_maps"][index-1]["map"],jsons["bonus_maps"][index-1]["name"])
+
+def exit_level() -> None:
+    if load["premap"]["type"] == 0:
+        change_menu(6)
+    elif load["premap"]["type"] == 1:
+        change_menu(7)
+    elif load["premap"]["type"] == 2:
+        change_menu(5)
 
 
 def check_elements() -> None:
     for z in range(len(load["map"]["elements"])):
         if load["map"]["elements"][z] [load["player"]["position"][1]] [load["player"]["position"][0]] == 2:
+
             print("goal reached!")
-            change_menu(1)
+            # repletion system
+            if load["premap"]["index"] in jsons["save_main"]["completed"][load["premap"]["type"]]:
+                print("repleted level!")
+            else:
+                print("first completion!")
+                jsons["save_main"]["completed"][load["premap"]["type"]].append(load["premap"]["index"])
+
+            exit_level()
             return None
     
     return None
@@ -223,13 +248,7 @@ while running:
         elif event.type == pygame.KEYDOWN:
             if load["menu"]["index"] == 0: # ingame
                 if event.key == pygame.K_KP0: # quit to menu
-                    if load["premap"]["type"] == 0:
-                        change_menu(6)
-                    elif load["premap"]["type"] == 1:
-                        change_menu(7)
-                    elif load["premap"]["type"] == 2:
-                        change_menu(5)
-
+                    exit_level()
                 elif event.key == pygame.K_KP6: # right
                     plr_move((1,0))
                 elif event.key == pygame.K_KP4: # left
@@ -359,6 +378,13 @@ while running:
                         (-1 * load["player"]["position"][1] + load["map"]["billboards"][z][i]["position"][1]) * BLOCK_SIZE[1] + (350-BLOCK_SIZE[1]/2)
                     ]
                 )
+
+        # render keys
+        for i in range(len(load["player"]["keys"])):
+            screen.blit(
+                load_texture(f"assets/textures/keys/{load["player"]["keys"][i]}.png"),
+                [i*-50+650,650]
+            )
     
 
     elif load["menu"]["index"] == 2: # pre ingame
@@ -366,6 +392,7 @@ while running:
         screen.blit(make_text(f"-{load["premap"]["name"]}-",50,(255,255,255)),(50,50))
         screen.blit(make_text(f"Press any key to start",20,(255,255,255)),(50,500))
         screen.blit(make_text(f"Keys:",30,(255,255,255)),(50,150))
+        # render keys
         for i in range(len(load["player"]["keys"])):
             screen.blit(
                 load_texture(f"assets/textures/keys/{load["player"]["keys"][i]}.png"),
@@ -394,6 +421,17 @@ while running:
     # framecount
     load["framecount"] += 1
 
+# change files
+for i in range(len(list(jsons_files.keys()))):
+    jsons_files[list(jsons_files.keys())[i]].seek(0)
+    if json.load(jsons_files[list(jsons_files.keys())[i]]) != jsons[list(jsons.keys())[i]]:
+        print("diffrent file!!!")
+        if CHANGE_FILES:
+            jsons_files[list(jsons_files.keys())[i]].seek(0)   # idk maybe you can remove one of those seeks
+            jsons_files[list(jsons_files.keys())[i]].truncate(0)
+            jsons_files[list(jsons_files.keys())[i]].seek(0)
+            json.dump(jsons[list(jsons.keys())[i]],jsons_files[list(jsons_files.keys())[i]])
+        
 # close files
 for i in range(len(list(jsons_files.keys()))):
     jsons_files[list(jsons_files.keys())[i]].close()

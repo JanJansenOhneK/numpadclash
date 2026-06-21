@@ -48,7 +48,8 @@
         "map":{
             "billboards":[
                 [
-                    {"position":[-4,4],"texture":"assets/textures/billboards/tuto_quit.png"}
+                    {"position":[-4,4],"texture":"assets/textures/billboards/tuto_quit.png"},
+                    {"position":[2,-3],"texture":"assets/textures/billboards/tuto_oneflag.png"}
                 ]
             ],
             "textures":[
