@@ -9,7 +9,8 @@ OLD_BUTTON_SYSTEM = False
 OLD_PLAY_SYSTEM = False
 OLD_LOAD_SYSTEM = False
 CHANGE_FILES = True
-GAME_NAME = "Numpad Clash | PRE 1.5.2"
+
+GAME_NAME = "Numpad Clash | PRE 1.5.2.1"
 
 import pygame
 ANY_KEY = [pygame.K_KP0,pygame.K_KP1,pygame.K_KP2,pygame.K_KP3,pygame.K_KP4,pygame.K_KP5,pygame.K_KP6,pygame.K_KP7,pygame.K_KP8,pygame.K_KP9]
