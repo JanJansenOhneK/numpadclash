@@ -27,7 +27,7 @@
             ],
             "spawn":{
                 "position":[1,1],
-                "keys":["m_n","m_e","m_s","m_w"]
+                "keys":{"1":"none","2":"m_s","3":"none","4":"m_w","5":"none","6":"m_e","7":"none","8":"m_n","9":"none"}
             }
         }
     },{
@@ -67,7 +67,7 @@
             ],
             "spawn":{
                 "position":[2,2],
-                "keys":["m_n","m_e","m_s","m_w"]
+                "keys":{"1":"none","2":"m_s","3":"none","4":"m_w","5":"none","6":"m_e","7":"none","8":"m_n","9":"none"}
             }
         }
     },{
@@ -113,7 +113,7 @@
             ],
             "spawn":{
                 "position":[5,0],
-                "keys":["m_n","m_e","m_s","m_w"]
+                "keys":{"1":"none","2":"m_s","3":"none","4":"m_w","5":"none","6":"m_e","7":"none","8":"m_n","9":"none"}
             }
         }
     },{
@@ -152,7 +152,7 @@
             ],
             "spawn":{
                 "position":[0,0],
-                "keys":["m_n","m_e","m_s","m_w"]
+                "keys":{"1":"none","2":"m_s","3":"none","4":"m_w","5":"none","6":"m_e","7":"none","8":"m_n","9":"none"}
             }
         }
     }

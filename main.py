@@ -10,7 +10,7 @@ OLD_PLAY_SYSTEM = False
 OLD_LOAD_SYSTEM = False
 CHANGE_FILES = True
 
-GAME_NAME = "Numpad Clash | PRE 1.5.2.1"
+GAME_NAME = "Numpad Clash | PRE 1.6.0"
 
 import pygame
 ANY_KEY = [pygame.K_KP0,pygame.K_KP1,pygame.K_KP2,pygame.K_KP3,pygame.K_KP4,pygame.K_KP5,pygame.K_KP6,pygame.K_KP7,pygame.K_KP8,pygame.K_KP9]
@@ -47,7 +47,7 @@ load = {
         "elements":[],
         "spawn":{
             "position":[0,0],
-            "keys":["m_n","m_e","m_s","m_w"],
+            "keys":{"1":"none","2":"m_s","3":"none","4":"m_w","5":"none","6":"m_e","7":"none","8":"m_n","9":"none"},
             "texture":"idle"
         }
     },
@@ -66,13 +66,13 @@ load = {
     },
     "player":{
         "position":[0,0],
-        "keys":["m_n","m_e","m_s","m_w"],
+        "keys":{"1":"none","2":"m_s","3":"none","4":"m_w","5":"none","6":"m_e","7":"none","8":"m_n","9":"none"},
         "texture":"idle"
     },
     "framecount":0
 }
 
-def load_texture(texture) -> pygame.Surface:
+def load_texture(texture:str) -> pygame.Surface:
     return pygame.transform.scale_by(
         pygame.image.load(f"{texture}"),
         SCALE_FACTOR # change
@@ -102,41 +102,22 @@ def check_collision(pos:tuple[int]) -> bool:
 
 def plr_move(pos:tuple[int]):
     global load
-    # check key
-    has_key = False
     if pos == (0,-1):
-        if "m_n" in load["player"]["keys"]:
-            has_key = True
-            load["player"]["texture"] = "move_n"
-        else:
-            plr_damage()
+        load["player"]["texture"] = "move_n"
     elif pos == (1,0):
-        if "m_e" in load["player"]["keys"]:
-            has_key = True
-            load["player"]["texture"] = "move_e"
-        else:
-            plr_damage()
+        load["player"]["texture"] = "move_e"
     elif pos == (0,1):
-        if "m_s" in load["player"]["keys"]:
-            has_key = True
-            load["player"]["texture"] = "move_s"
-        else:
-            plr_damage()
+        load["player"]["texture"] = "move_s"
     elif pos == (-1,0):
-        if "m_w" in load["player"]["keys"]:
-            has_key = True
-            load["player"]["texture"] = "move_w"
-        else:
-            plr_damage()
+        load["player"]["texture"] = "move_w"
 
     # move and collide and balls
     # nvm no balls
-    if has_key:
-        if check_collision((load["player"]["position"][0] + pos[0],load["player"]["position"][1] + pos[1])):
-            pass
-        else:
-            load["player"]["position"][0] += pos[0]
-            load["player"]["position"][1] += pos[1]
+    if check_collision((load["player"]["position"][0] + pos[0],load["player"]["position"][1] + pos[1])):
+        pass
+    else:
+        load["player"]["position"][0] += pos[0]
+        load["player"]["position"][1] += pos[1]
 
 def load_map(map) -> None:
     global load
@@ -239,7 +220,32 @@ def check_elements() -> None:
             return None
     
     return None
+
+def press_key(key:str) -> None:
+    if load["player"]["keys"][key] == "none" or load["player"]["keys"][key] == None:
+        return None
+    elif load["player"]["keys"][key] == "m_n":
+        plr_move((0,-1))
+    elif load["player"]["keys"][key] == "m_e":
+        plr_move((1, 0))
+    elif load["player"]["keys"][key] == "m_s":
+        plr_move((0, 1))
+    elif load["player"]["keys"][key] == "m_w":
+        plr_move((-1,0))
             
+def render_keys() -> None:
+    screen.blits([
+        [load_texture(f"assets/textures/keys/{load["player"]["keys"]["7"]}.png"),[550,550]],
+        [load_texture(f"assets/textures/keys/{load["player"]["keys"]["8"]}.png"),[600,550]],
+        [load_texture(f"assets/textures/keys/{load["player"]["keys"]["9"]}.png"),[650,550]],
+        [load_texture(f"assets/textures/keys/{load["player"]["keys"]["4"]}.png"),[550,600]],
+        [load_texture(f"assets/textures/keys/{load["player"]["keys"]["5"]}.png"),[600,600]],
+        [load_texture(f"assets/textures/keys/{load["player"]["keys"]["6"]}.png"),[650,600]],
+        [load_texture(f"assets/textures/keys/{load["player"]["keys"]["1"]}.png"),[550,650]],
+        [load_texture(f"assets/textures/keys/{load["player"]["keys"]["2"]}.png"),[600,650]],
+        [load_texture(f"assets/textures/keys/{load["player"]["keys"]["3"]}.png"),[650,650]],
+    ])
+
 
 while running:
 
@@ -255,16 +261,30 @@ while running:
             running = False
         elif event.type == pygame.KEYDOWN:
             if load["menu"]["index"] == 0: # ingame
-                if event.key == pygame.K_KP0: # quit to menu
+
+                # quit to menu
+                if event.key == pygame.K_KP0:
                     exit_level()
-                elif event.key == pygame.K_KP6: # right
-                    plr_move((1,0))
-                elif event.key == pygame.K_KP4: # left
-                    plr_move((-1,0))
-                elif event.key == pygame.K_KP2: # down
-                    plr_move((0,1))
-                elif event.key == pygame.K_KP8: # up
-                    plr_move((0,-1))
+
+                # all other keys
+                elif event.key == pygame.K_KP1:
+                    press_key("1")
+                elif event.key == pygame.K_KP2:
+                    press_key("2")
+                elif event.key == pygame.K_KP3:
+                    press_key("3")
+                elif event.key == pygame.K_KP4:
+                    press_key("4")
+                elif event.key == pygame.K_KP5:
+                    press_key("5")
+                elif event.key == pygame.K_KP6:
+                    press_key("6")
+                elif event.key == pygame.K_KP7:
+                    press_key("7")
+                elif event.key == pygame.K_KP8:
+                    press_key("8")
+                elif event.key == pygame.K_KP9:
+                    press_key("9")
             
             elif load["menu"]["index"] == 2: # pre ingame
                 if event.key in ANY_KEY:
@@ -400,24 +420,16 @@ while running:
                 )
 
         # render keys
-        for i in range(len(load["player"]["keys"])):
-            screen.blit(
-                load_texture(f"assets/textures/keys/{load["player"]["keys"][i]}.png"),
-                [i*-50+650,650]
-            )
+        render_keys()
     
 
     elif load["menu"]["index"] == 2: # pre ingame
         screen.fill((50,50,50))
         screen.blit(make_text(f"-{load["premap"]["name"]}-",50,(255,255,255)),(50,50))
         screen.blit(make_text(f"Press any key to start",20,(255,255,255)),(50,500))
-        screen.blit(make_text(f"Keys:",30,(255,255,255)),(50,150))
+        
         # render keys
-        for i in range(len(load["player"]["keys"])):
-            screen.blit(
-                load_texture(f"assets/textures/keys/{load["player"]["keys"][i]}.png"),
-                [i*50+50,200]
-            )
+        render_keys()
 
 
     # render player
