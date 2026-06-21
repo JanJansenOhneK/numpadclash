@@ -9,7 +9,7 @@ OLD_BUTTON_SYSTEM = False
 OLD_PLAY_SYSTEM = False
 OLD_LOAD_SYSTEM = False
 CHANGE_FILES = True
-GAME_NAME = "Numpad Clash | PRE 1.5.0"
+GAME_NAME = "Numpad Clash | PRE 1.5.1"
 
 import pygame
 ANY_KEY = [pygame.K_KP0,pygame.K_KP1,pygame.K_KP2,pygame.K_KP3,pygame.K_KP4,pygame.K_KP5,pygame.K_KP6,pygame.K_KP7,pygame.K_KP8,pygame.K_KP9]
@@ -28,7 +28,8 @@ jsons_files = {
     "props_menus":open("assets/menus.json","r"),
     "story_maps":open("assets/maps.json","r"),
     "bonus_maps":open("assets/bonusmaps.json","r"),
-    "save_main":open("saves/save0.json","r+")
+    "save_main":open("saves/save0.json","r+"),
+    "save_empty":open("saves/empty.json","r")
 }
 
 jsons = {}
@@ -167,7 +168,7 @@ def press_menubutton(index:int,menu:int) -> None:
         if index == 0:
             change_menu(4)
         elif index == 1:
-            pass
+            change_menu(8)
         elif index == 2:
             change_menu(3)
         elif index == 3:
@@ -205,6 +206,11 @@ def press_menubutton(index:int,menu:int) -> None:
             load["premap"]["type"] = 1
             load["premap"]["index"] = index-1
             play_map(jsons["bonus_maps"][index-1]["map"],jsons["bonus_maps"][index-1]["name"])
+    elif menu == 8:
+        if index == 0:
+            change_menu(1)
+        elif index == 1:
+            jsons["save_main"] = copy.deepcopy(jsons["save_empty"])
 
 def exit_level() -> None:
     if load["premap"]["type"] == 0:
@@ -304,6 +310,9 @@ while running:
         load["menu"]["buttons"] = ["Back"]
         for map in jsons["bonus_maps"]:
             load["menu"]["buttons"].append(f'Play "{map["name"]}"')
+    
+    elif load["menu"]["index"] == 8:
+        load["menu"]["buttons"] = ["Back","Reset Savefile"]
                 
 
     # screen reset
@@ -423,14 +432,21 @@ while running:
 
 # change files
 for i in range(len(list(jsons_files.keys()))):
-    jsons_files[list(jsons_files.keys())[i]].seek(0)
-    if json.load(jsons_files[list(jsons_files.keys())[i]]) != jsons[list(jsons.keys())[i]]:
-        print("diffrent file!!!")
-        if CHANGE_FILES:
-            jsons_files[list(jsons_files.keys())[i]].seek(0)   # idk maybe you can remove one of those seeks
-            jsons_files[list(jsons_files.keys())[i]].truncate(0)
-            jsons_files[list(jsons_files.keys())[i]].seek(0)
-            json.dump(jsons[list(jsons.keys())[i]],jsons_files[list(jsons_files.keys())[i]])
+
+    with jsons_files[list(jsons_files.keys())[i]] as thefile:
+        # jsons_files[list(jsons_files.keys())[i]] = thefile
+        # dont uncomment the comment over this comment its for readibility its not code
+        thefile.seek(0)
+        if json.load(thefile) != jsons[list(jsons.keys())[i]]:
+            print("diffrent file!!!")
+            if CHANGE_FILES:
+                if thefile.writable:
+                    thefile.seek(0)   # idk maybe you can remove one of those seeks
+                    thefile.truncate(0)
+                    thefile.seek(0)
+                    json.dump(jsons[list(jsons.keys())[i]],thefile)
+                else:
+                    print("FILE NOT WRITEABLE")
         
 # close files
 for i in range(len(list(jsons_files.keys()))):

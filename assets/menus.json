@@ -23,5 +23,8 @@
     },{
         "name":"Bonus Level Selection",
         "button":true
+    },{
+        "name":"Settings",
+        "button":true
     }
 ]
