@@ -5,5 +5,6 @@
     {"name":"Stone","texture":"assets/textures/blocks/t_stone.png"},
     {"name":"Flower","texture":"assets/textures/blocks/flower.png"},
     {"name":"Goal","texture":"assets/textures/blocks/flag.png"},
-    {"name":"Rock","texture":"assets/textures/blocks/rock.png"}
+    {"name":"Rock","texture":"assets/textures/blocks/rock.png"},
+    {"name":"Floorstone","texture":"assets/textures/blocks/floorstone.png"}
 ]

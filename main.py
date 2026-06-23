@@ -10,7 +10,7 @@ OLD_PLAY_SYSTEM = False
 OLD_LOAD_SYSTEM = False
 CHANGE_FILES = True
 
-GAME_NAME = "Numpad Clash | PRE 1.6.1"
+GAME_NAME = "Numpad Clash | PRE 1.6.2"
 
 import pygame
 ANY_KEY = [pygame.K_KP0,pygame.K_KP1,pygame.K_KP2,pygame.K_KP3,pygame.K_KP4,pygame.K_KP5,pygame.K_KP6,pygame.K_KP7,pygame.K_KP8,pygame.K_KP9]
@@ -41,6 +41,7 @@ for i in range(len(list(jsons_files.keys()))):
 
 load = {
     "map":{
+        "background":[255,255,0],
         "billboards":[],
         "textures":[],
         "elements":[],
@@ -346,7 +347,7 @@ while running:
                 
 
     # screen reset
-    screen.fill((0,255,255))
+    screen.fill((0,0,0))
 
     # menu render
     if jsons["props_menus"][load["menu"]["index"]]["button"]:
@@ -355,7 +356,7 @@ while running:
         for y in range(int(SCREEN_SIZE[0]/BLOCK_SIZE[0])):
             for x in range(int(SCREEN_SIZE[1]/BLOCK_SIZE[1])):
                 screen.blit(
-                    pygame.transform.scale(pygame.image.load(jsons["props_blocks"][2]["texture"]),BLOCK_SIZE),
+                    load_texture(jsons["props_blocks"][2]["texture"]),
                     [x*BLOCK_SIZE[0],y*BLOCK_SIZE[1]]
                 )
 
@@ -394,6 +395,9 @@ while running:
 
         # check elements
         check_elements()
+
+        # rander bg
+        screen.fill(load["map"]["background"])
 
         # render map
         for z in range(len(load["map"]["textures"])):

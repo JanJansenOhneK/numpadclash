@@ -1,0 +1,28 @@
+{
+    "name":"Template",
+    "map":{
+        "background":[0,255,255],
+        "billboards":[
+            {"position":[0,0],"texture":"assets/textures/billboards/bill.png"}
+        ],
+        "spawn":{
+            "position":[0,0],
+            "keys":{"1":"none","2":"m_s","3":"none","4":"m_w","5":"none","6":"m_e","7":"none","8":"m_n","9":"none"}
+        },
+        "textures":[
+            [
+                [2,0],
+                [2,2]
+            ],[
+                [0,1],
+                [0,5]
+            ]
+        ],
+        "elements":[
+            [
+                [0,1],
+                [0,2]
+            ]
+        ]
+    }
+}

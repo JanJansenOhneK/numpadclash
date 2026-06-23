@@ -1,8 +1,104 @@
 [
     {
+        "name":"Old Tutorial 1",
+        "context":"The old tutorial",
+        "map":{
+            "background":[0,255,255],
+            "billboards":[
+                [
+                    {"position":[0,0],"texture":"assets/textures/billboards/tuto_move.png"},
+                    {"position":[5,7],"texture":"assets/textures/billboards/tuto_flag.png"}
+                ]
+            ],
+            "textures":[
+                [
+                    [0,0,0,0,0,3,3,3,3,3],
+                    [0,0,0,0,0,3,2,2,2,3],
+                    [0,0,0,0,0,3,2,2,2,3],
+                    [3,3,3,3,3,3,2,2,2,3],
+                    [3,2,2,2,2,2,2,2,2,3],
+                    [3,2,2,2,2,2,2,2,2,3],
+                    [3,3,3,3,3,3,3,3,3,3]
+                ],[
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,4,5,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,4,0],
+                    [0,0,0,0,0,4,0,0,0,0],
+                    [0,0,4,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0]
+                ]
+            ],
+            "elements":[
+                [
+                    [0,0,0,0,0,1,1,1,1,1],
+                    [0,0,0,0,0,1,0,2,0,1],
+                    [0,0,0,0,0,1,0,0,0,1],
+                    [1,1,1,1,1,1,0,0,0,1],
+                    [1,0,0,0,0,0,0,0,0,1],
+                    [1,0,0,0,0,0,0,0,0,1],
+                    [1,1,1,1,1,1,1,1,1,1]
+                ]
+            ],
+            "spawn":{
+                "position":[1,5],
+                "keys":{"1":"none","2":"m_s","3":"none","4":"m_w","5":"none","6":"m_e","7":"none","8":"m_n","9":"none"}
+            }
+        }
+    },{
+        "name":"Old Tutorial 2",
+        "context":"The old 2 tutorial",
+        "map":{
+            "background":[0,255,255],
+            "billboards":[
+                [
+                    {"position":[-4,4],"texture":"assets/textures/billboards/tuto_quit.png"},
+                    {"position":[2,-3],"texture":"assets/textures/billboards/tuto_oneflag.png"}
+                ]
+            ],
+            "textures":[
+                [
+                    [2,2,2,2,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,2,2,2,2],
+                    [2,2,2,2,2,2,2,2,2,2]
+                ],[
+                    [6,6,6,6,6,6,6,6,6,6],
+                    [6,6,0,4,0,6,5,0,0,6],
+                    [6,0,0,6,0,0,6,6,0,6],
+                    [6,0,6,6,6,0,0,0,0,6],
+                    [6,0,0,0,0,6,6,6,6,6],
+                    [6,4,6,6,0,6,0,4,0,6],
+                    [6,0,6,0,0,6,6,6,5,6],
+                    [6,6,6,6,6,6,6,6,6,6]
+                ]
+            ],
+            "elements":[
+                [
+                    [1,1,1,1,1,1,1,1,1,1],
+                    [1,1,0,0,0,1,2,0,0,1],
+                    [1,0,0,1,0,0,1,1,0,1],
+                    [1,0,1,1,1,0,0,0,0,1],
+                    [1,0,0,0,0,1,1,1,1,1],
+                    [1,0,1,1,0,1,0,0,0,1],
+                    [1,0,1,0,0,1,1,1,2,1],
+                    [1,1,1,1,1,1,1,1,1,1]
+                ]
+            ],
+            "spawn":{
+                "position":[1,6],
+                "keys":{"1":"none","2":"m_s","3":"none","4":"m_w","5":"none","6":"m_e","7":"none","8":"m_n","9":"none"}
+            }
+        }
+    },{
         "name":"Keytest 1",
         "context":"Test for the key gimmick",
         "map":{
+            "background":[0,255,255],
             "billboards":[
                 
             ],
@@ -42,6 +138,7 @@
         "name":"Empty",
         "context":"Test for billboards",
         "map":{
+            "background":[0,255,255],
             "billboards":[
                 [
                     {"position":[0,0],"texture":"assets/textures/billboards/rickroll.png"},
@@ -73,6 +170,7 @@
         "name":"Ai Slop",
         "context":"I told an ai to make a level and this came out",
         "map":{
+            "background":[0,255,255],
             "billboards":[],
             "textures":[
                 [
@@ -113,6 +211,7 @@
         "name":"Ai Slop 2",
         "context":"I told an ai to make a level AGAIN and this came out",
         "map":{
+            "background":[0,255,255],
             "billboards":[],
             "textures":[
                 [
@@ -159,6 +258,7 @@
         "name":"G of Doom",
         "context":"The first level to ever exist in this game!!!",
         "map":{
+            "background":[0,255,255],
             "billboards":[
                 [{"position":[1,1],"texture":"assets/textures/billboards/bill.png"}]
             ],
